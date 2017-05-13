@@ -185,6 +185,7 @@
             manageHook         = manageScratchPad <+> myManageHook <+> manageHook kdeConfig,
                 startupHook = do
                     setKeyboardMapping
+                    spawn "sh /usr/local/bin/config_copy.sh"
                     -- For Java programs (prevents blank screen)
                     setWMName "LG3D"
                     resetBackground
