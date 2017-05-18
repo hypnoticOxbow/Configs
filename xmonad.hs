@@ -30,7 +30,7 @@
     resetBackground :: X ()
     resetBackground = spawn "nitrogen --restore"
 
-    myKeys conf@(XConfig {XMonad.modMask = modm}) = Map.fromList $ 
+    myKeys conf@(XConfig {XMonad.modMask = modm}) = Map.fromList $
         [((modm, xK_Return), spawn $ XMonad.terminal conf)
         , ((modm, xK_g), sendMessage ToggleStruts)
         , ((modm .|. controlMask .|. shiftMask,xK_g),sendMessage $ SetStruts [] [D])
@@ -82,6 +82,9 @@
         , ((modm,               xK_u     ), spawn "xrandr --output eDP1 --rotate normal")
         , ((modm,               xK_y     ), spawn "xrandr --output eDP1 --rotate left")
     --Rotation end
+    --Passmenu Coolness
+    --    , ((modm,               xK_d     ), spawn "sh /usr/local/bin/passmenu.sh")
+
     --i3lock -- screensaver
         , ((modm .|. controlMask, xK_l     ), spawn "lock -pf PragmataPro -t \"Incitatus - karin010\" -- scrot ")
     -- Restart xmonad
@@ -91,7 +94,7 @@
         , ((modm, xK_d), viewScreen 1)
         , ((modm .|. shiftMask, xK_a), sendToScreen 0)
         , ((modm .|. shiftMask, xK_d), sendToScreen 1)
-        ] 
+        ]
             ++
     -- Workspace keybindings
         [((m .|. modm, k), windows $ f i)
@@ -185,6 +188,8 @@
             manageHook         = manageScratchPad <+> myManageHook <+> manageHook kdeConfig,
                 startupHook = do
                     setKeyboardMapping
+                    spawn "xrandr --dpi 144"
+                    spawn "xrdb merge ~/.Xresources"
                     -- For Java programs (prevents blank screen)
                     setWMName "LG3D"
                     resetBackground

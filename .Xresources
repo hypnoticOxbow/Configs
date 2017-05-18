@@ -2,19 +2,19 @@
  URxvt*buffered: true
  URxvt*cursorBlink: true
  URxvt*underlineColor: yellow
- URxvt*font:  xft:PragmataPro for Powerline:size=20:antialias=true
- URxvt*depth: 32 
+ URxvt*font:  xft:PragmataPro for Powerline:size=12:antialias=true
+ URxvt*depth: 32
  URxvt*borderless: 0
  URxvt*internalBorder: 0
  URxvt*externalBorder: 0
  URxvt*borderColor: #1c1b1a
  URxvt*scrollBar: false
- URxvt*loginShell: false 
+ URxvt*loginShell: false
  Urxvt*secondaryScroll:  true    # Enable Shift-PageUp/Down in screen
  URxvt*saveLines: 5000
  URxvt*termName: rxvt-unicode
  URxvt.perl-ext-common: default,matcher
- URxvt.urlLauncher: vivaldi 
+ URxvt.urlLauncher: vivaldi
  URxvt.matcher.button: 1
  URxvt.perl-ext: default,url-select
  URxvt.keysym.M-u: perl:url-select:select_next
@@ -29,7 +29,7 @@
 *cursorColor: #aeee00
 *scrollColor: #45413b
 *fadeColor: #ffffff
-*fading: 0 
+*fading: 0
 
 ! black
 *color0: #141413

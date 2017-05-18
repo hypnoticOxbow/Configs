@@ -12,6 +12,9 @@ Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'bling/vim-bufferline'
 
+Plug 'sjl/badwolf'
+
+
 
 Plug 'tpope/vim-fugitive'
 Plug 'lervag/vimtex'
@@ -39,6 +42,9 @@ set undofile   " Maintain undo history between sessions
 set undodir=~/.vim/undo/
 "Undotree
 nnoremap <F5> :UndotreeToggle<cr>
+
+
+"Badwolf plugin
 
 
 "Makes Cursor straight line
@@ -83,7 +89,8 @@ set rtp^="/home/ian/.opam/system/share/ocp-indent/vim"
 
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
-let g:autoformat_remove_trailing_spaces = 0
+let g:autoformat_remove_trailing_spaces = 1
+
 
 let g:formatdef_my_custom_ocaml = '"ocp-indent"'
 let g:formatters_ocaml = ['my_custom_ocaml']
@@ -95,8 +102,8 @@ let b:formatters_c = ['custom_c']
 
 
 "Formatting - Autoformat plugin
-noremap <F3> :Autoformat<CR>
-au BufWrite * :Autoformat
+"noremap <F3> :Autoformat<CR>
+"au BufWrite * :Autoformat
 
 "Nerd comment plugin options
 
@@ -112,20 +119,20 @@ let g:NERDTrimTrailingWhitespace = 1
 imap <C-c> <plug>NERDCommenterInsert
 "Syntastic Options --Default
 
-"set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
 "Syntastic Checkers
 
-"let g:syntastic_ocaml_checkers = ['syntastic-ocaml-camlp4o']
+let g:syntastic_ocaml_checkers = ['syntastic-ocaml-camlp4o']
 
-"let g:syntastic_c_checkers = ['syntastic-c-gcc']
+let g:syntastic_c_checkers = ['syntastic-c-gcc']
 
 
 

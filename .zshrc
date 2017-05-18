@@ -12,6 +12,68 @@ export TERM="xterm-256color"
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="powerlevel9k/powerlevel9k"
 
+
+
+#Powerline Settings -- Theme
+# Configuracion POWERLVEL9K
+#POWERLEVEL9K_MODE='awesome-patched'
+
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
+POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
+
+# Elementos de la barra
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(background_jobs virtualenv rbenv rvm time)
+POWERLEVEL9K_STATUS_VERBOSE=false
+
+POWERLEVEL9K_DIR_HOME_BACKGROUND='09'
+POWERLEVEL9K_DIR_DEFAULT_BACKGROUND='09'
+POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND='009'
+POWERLEVEL9K_DIR_HOME_FOREGROUND='236'
+POWERLEVEL9K_DIR_DEFAULT_FOREGROUND='236'
+POWERLEVEL9K_DIR_HOME_SUBFOLDER_FOREGROUND='236'
+
+
+POWERLEVEL9K_VCS_GIT_ICON=''
+POWERLEVEL9K_VCS_STAGED_ICON='\u00b1'
+POWERLEVEL9K_VCS_UNTRACKED_ICON='\u25CF'
+POWERLEVEL9K_VCS_UNSTAGED_ICON='\u00b1'
+POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON='\u2193'
+POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON='\u2191'
+
+POWERLEVEL9K_VCS_CLEAN_BACKGROUND='236'
+POWERLEVEL9K_VCS_CLEAN_BACKGROUND='208'
+POWERLEVEL9K_VCS_CLEAN_FOREGROUND='236'
+POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='214'
+POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND='236'
+POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='196'
+POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='236'
+
+#POWERLEVEL9K_VCS_GIT_ICON=''
+#POWERLEVEL9K_VCS_STAGED_ICON='\u00b1'
+#POWERLEVEL9K_VCS_UNTRACKED_ICON='\u25CF'
+#POWERLEVEL9K_VCS_UNSTAGED_ICON='\u00b1'
+#POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON='\u2193'
+#POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON='\u2191'
+#
+# `git hub colors`
+#POWERLEVEL9K_VCS_CLEAN_BACKGROUND='236'
+#POWERLEVEL9K_VCS_CLEAN_BACKGROUND='119'
+#POWERLEVEL9K_VCS_CLEAN_FOREGROUND='236'
+#POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='214'
+#POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND='236'
+#POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='196'
+#POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='236'
+#
+# Quitar iconos del inicio
+#POWERLEVEL9K_HOME_ICON=''
+#POWERLEVEL9K_HOME_SUB_ICON=''
+#POWERLEVEL9K_FOLDER_ICON=''
+#
+
+
+
+
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -54,7 +116,15 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git compleat sprunge archlinux common-aliases sudo pacman pass last-working-dir)
+plugins=(colorize  cp dirhistory sudo git compleat archlinux common-aliases sudo pacman pass last-working-dir zsh-syntax-highlighting)
+
+
+#Original Verison -- Uncomment to restore back to original
+#plugins=(git compleat sprunge archlinux common-aliases sudo pacman pass last-working-dir)
+
+
+
+
 
 source $ZSH/oh-my-zsh.sh
 
@@ -72,6 +142,12 @@ source $ZSH/oh-my-zsh.sh
    export EDITOR='vim'
  fi
 
+
+
+function paste() {
+  local file=${1:-/dev/stdin}
+    curl --data-binary @${file} https://paste.rs
+          }
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
@@ -85,11 +161,9 @@ export PATH=$PATH:~/Android/Sdk/tools/bin/
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias zshconfig="mate ~/.zshrc"
-alias ohmyzsh="mate ~/.oh-my-zsh"
 alias clip="xclip -selection clipboard -i"
 alias spotify="spotify --force-device-scale-factor=2"
- #alias spotify ="spotify --force-device-scale-factor=1.5"
+
 
  # OPAM configuration
 . /home/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
