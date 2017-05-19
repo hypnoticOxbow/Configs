@@ -140,7 +140,7 @@
         [ checkDock                     --> doIgnore
         , className =? "MPlayer"        --> doFloat
         , className =? "Vivaldi-stable" --> doShift "2"
-        , title     =? "Signal"         --> doShift "3"
+        , className =? "Google-chrome"  --> doShift "3"
         , className =? "yakuake"        --> doFloat
         , className =? "Yakuake"        --> doFloat
         , className =? "Kmix"           --> doFloat

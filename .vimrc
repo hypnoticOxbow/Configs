@@ -45,7 +45,7 @@ nnoremap <F5> :UndotreeToggle<cr>
 
 
 "Badwolf plugin
-
+colorscheme badwolf
 
 "Makes Cursor straight line
 set guicursor=i:ver25-iCursor
