@@ -14,8 +14,6 @@ Plug 'bling/vim-bufferline'
 
 Plug 'sjl/badwolf'
 
-
-
 Plug 'tpope/vim-fugitive'
 Plug 'lervag/vimtex'
 Plug 'Chiel92/vim-autoformat'
@@ -102,8 +100,8 @@ let b:formatters_c = ['custom_c']
 
 
 "Formatting - Autoformat plugin
-"noremap <F3> :Autoformat<CR>
-"au BufWrite * :Autoformat
+noremap <F3> :Autoformat<CR>
+au BufWrite * :Autoformat
 
 "Nerd comment plugin options
 
@@ -138,6 +136,10 @@ let g:syntastic_c_checkers = ['syntastic-c-gcc']
 
 
 " Options.
+"Disable autowrap in vim
+set tw=0
+set textwidth=0 wrapmargin=0
+
 set relativenumber
 set tabstop=4 softtabstop=0 expandtab shiftwidth=2 smarttab
 set smartcase
@@ -159,7 +161,6 @@ set shiftwidth=4    " Indent by 4 columns (for C functions, etc).
 set showcmd     " Show partially typed commands
 set showmatch       " Show parentheses matching
 set smartindent     " Indent settings (really only the cindent matters)
-set textwidth=80    " Maximum line width
 set viminfo='0,\"100,   " Stay at the start of a file when opening it
 set writebackup     " Write temporary backup files in case we crash
 

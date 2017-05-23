@@ -5,7 +5,7 @@ export TERM="xterm-256color"
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-  export ZSH=/home/ian/.oh-my-zsh
+export ZSH=/home/ian/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -18,8 +18,8 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 # Configuracion POWERLVEL9K
 #POWERLEVEL9K_MODE='awesome-patched'
 
-POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
-POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
+#POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
 
 # Elementos de la barra
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir vcs)

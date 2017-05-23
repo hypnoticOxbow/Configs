@@ -78,7 +78,7 @@
 --, ((modm .|. controlMask, xK_x     ), io (exitWith ExitSuccess))
         , ((modm .|. controlMask, xK_x     ), spawn "gnome-session-quit")
     --Rotation:
-        , ((modm,               xK_i     ), spawn "xrandr --output eDP1 --rotate inverted")
+        , ((modm,               xK_i     ), spawn "randr --output eDP1 --rotate inverted")
         , ((modm,               xK_u     ), spawn "xrandr --output eDP1 --rotate normal")
         , ((modm,               xK_y     ), spawn "xrandr --output eDP1 --rotate left")
     --Rotation end
