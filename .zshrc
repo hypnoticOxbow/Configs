@@ -163,7 +163,10 @@ export PATH=$PATH:~/Android/Sdk/tools/bin/
 # Example aliases
 alias clip="xclip -selection clipboard -i"
 alias spotify="spotify --force-device-scale-factor=2"
+alias adb="/home/ian/Android/Sdk/platform-tools/adb"
+alias man="viman"
+alias ws="cd ~/Documents/Workspace"
+alias prettyjson="python -m json.tool"
 
-
- # OPAM configuration
+# OPAM configuration
 . /home/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true

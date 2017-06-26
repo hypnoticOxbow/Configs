@@ -78,7 +78,7 @@
 --, ((modm .|. controlMask, xK_x     ), io (exitWith ExitSuccess))
         , ((modm .|. controlMask, xK_x     ), spawn "gnome-session-quit")
     --Rotation:
-        , ((modm,               xK_i     ), spawn "randr --output eDP1 --rotate inverted")
+        , ((modm,               xK_i     ), spawn "xrandr --output eDP1 --rotate inverted")
         , ((modm,               xK_u     ), spawn "xrandr --output eDP1 --rotate normal")
         , ((modm,               xK_y     ), spawn "xrandr --output eDP1 --rotate left")
     --Rotation end
@@ -109,12 +109,12 @@
     --
     myMouseBindings (XConfig {XMonad.modMask = modm}) = Map.fromList $
     -- mod-button1, Set the window to floating mode and move by dragging
-        [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
+        [ ((modm .|. controlMask, button1), (\w -> focus w >> mouseMoveWindow w
                 >> windows W.shiftMaster))
     -- mod-button2, Raise the window to the top of the stack
 {-, ((modm, button2), (\w -> focus w >> windows W.shiftMaster))-}
 -- mod-button3, Set the window to floating mode and resize by dragging
-        , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
+        , ((modm .|. controlMask, button3), (\w -> focus w >> mouseResizeWindow w
             >> windows W.shiftMaster))
 -- you may also bind events to the mouse scroll wheel (button4 and button5)
         ]
@@ -151,7 +151,7 @@
         , className =? "plasma-desktop" --> doFloat
         , className =? "Plasma-desktop" --> doFloat
         , className =? "nm-applet"      --> doFloat
-        , className =? "krunner"        --> doFloat
+       -- , className =? "krunner"        --> doFloat
         , className =? "Notifications"  --> doFloat
         , className =? "notifications"  --> doFloat
         , className =? "ksplashsimple"  --> doFloat
