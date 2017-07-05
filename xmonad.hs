@@ -82,6 +82,12 @@
         , ((modm,               xK_u     ), spawn "xrandr --output eDP1 --rotate normal")
         , ((modm,               xK_y     ), spawn "xrandr --output eDP1 --rotate left")
     --Rotation end
+    --Music Player hotkeys
+        , ((modm,               xK_n     ), spawn "playerctl next")
+        , ((modm,               xK_p     ), spawn "playerctl play-pause")
+        , ((modm,               xK_v     ), spawn "playerctl previous")
+
+
     --Passmenu Coolness
     --    , ((modm,               xK_d     ), spawn "sh /usr/local/bin/passmenu.sh")
 
