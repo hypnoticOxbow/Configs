@@ -116,7 +116,7 @@ POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='236'
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(colorize  cp dirhistory sudo git compleat archlinux common-aliases sudo pacman pass last-working-dir zsh-syntax-highlighting)
+plugins=(colorize cp dirhistory sudo git compleat archlinux httpie common-aliases sudo pacman pass zsh-syntax-highlighting last-working-dir)
 
 
 #Original Verison -- Uncomment to restore back to original
