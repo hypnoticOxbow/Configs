@@ -8,6 +8,10 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle'}
 
 
+"Latex funness
+Plug 'lervag/vimtex'
+
+
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'bling/vim-bufferline'
@@ -21,8 +25,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'lervag/vimtex'
 Plug 'Chiel92/vim-autoformat'
 
-"Sadly syntastic has issues with jython
-"Plug 'https://github.com/vim-syntastic/syntastic'
+Plug 'https://github.com/vim-syntastic/syntastic'
 
 
 Plug 'jiangmiao/auto-pairs'
@@ -48,6 +51,12 @@ set undodir=~/.vim/undo/
 
 "Undotree
 nnoremap <F5> :UndotreeToggle<cr>
+
+"Latex config
+let g:tex_flavor='latex'
+let g:vimtex_view_method = 'zathura'
+map \gq ?^$\\|^\s*\(\\begin\\|\\end\\|\\label\)?1<CR>gq//-1<CR>
+omap lp ?^$\\|^\s*\(\\begin\\|\\end\\|\\label\)?1<CR>//-1<CR>.<CR>
 
 
 "Deoplete
@@ -177,7 +186,7 @@ let g:syntastic_c_checkers = ['syntastic-c-gcc']
 "Disable autowrap in vim
 set tw=0
 set textwidth=0 wrapmargin=0
-
+set spell
 set relativenumber
 set tabstop=4 softtabstop=0 expandtab shiftwidth=2 smarttab
 set smartcase
@@ -228,48 +237,13 @@ au BufNewFile,BufRead *.txt set iskeyword=
 au BufNewFile,BufRead *.Snw set syn=sweave
 
 " On LaTeX files don't use indenting.
-au BufNewFile,BufRead *.tex,*.Snw set noautoindent nosmartindent nocindent
+au BufNewFile,BufRead *.tex,*.Snw set noautoindent nosmartindent nocindent formatoptions=tca fo+=a textwidth=80
 " On HTML files don't use indenting.
 au BufNewFile,BufRead *.html set noautoindent nosmartindent nocindent
 
-" On CGI files, determine type by reading in a line.
-fun! CGICheck()
-    let l = getline(nextnonblank(1))
-    if l =~ 'php'
-        set syn=php
-    elseif l =~ 'perl'
-        set syn=perl
-    endif
-endfun
 
-au BufRead *.cgi    call CGICheck()
-
-" On reading TeX files, don't wrap to eighty characters. I know this is
-" horrible, but it makes formatting and parsing much easier for me.
-" TODO Figure out how to make the scrolling work properly with line wrapping.
-fun! TeXformat()
-    set noautoindent nosmartindent nocindent
-    set textwidth=0
-    set linebreak
-    set display=lastline
-    noremap j gj
-    noremap k gk
-    noremap $ g$
-    noremap ^ g^
-    noremap 0 g0
-    noremap A g$a
-    noremap I g^i
-    noremap C cg$
-    noremap D dg$
-endfun
-
-"au BufNewFile,BufRead *.tex call TeXformat()
 
 " Set expandtab for Fortran files
 au BufNewFile,BufRead *.f,*.for set expandtab
 
-" I don't know why I need this...
-augroup cprog
-    au!
-augroup end
 

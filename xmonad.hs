@@ -18,7 +18,7 @@
     import qualified Data.Map        as Map
     import qualified XMonad.Hooks.ICCCMFocus as ICCCMFocus
 
-    myTerminal = "urxvt"
+    myTerminal = "alacritty"
     setKeyboardMapping :: X ()
     setKeyboardMapping = spawn "setxkbmap -layout us \
         \-variant intl_nodeadkeys \

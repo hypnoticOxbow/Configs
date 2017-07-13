@@ -7,6 +7,17 @@ export TERM="xterm-256color"
 # Path to your oh-my-zsh installation.
 export ZSH=/home/ian/.oh-my-zsh
 
+
+#Ruby gems stuff
+#Setting the GEM_PATH and GEM_HOME variables may not be necessary, check 'gem env' output to verify whether both variables already exist
+GEM_HOME=$(ls -t -U | ruby -e 'puts Gem.user_dir')
+GEM_PATH=$GEM_HOME
+export PATH=$PATH:$GEM_HOME/bin
+
+
+
+
+
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
@@ -16,15 +27,17 @@ ZSH_THEME="powerlevel9k/powerlevel9k"
 
 #Powerline Settings -- Theme
 # Configuracion POWERLVEL9K
-#POWERLEVEL9K_MODE='awesome-patched'
+POWERLEVEL9K_MODE='awesome-fontconfig'
 
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 #POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
 
-# Elementos de la barra
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(background_jobs virtualenv rbenv rvm time)
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir dir_writable_joined vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time background_jobs virtualenv rbenv rvm time)
 POWERLEVEL9K_STATUS_VERBOSE=false
+
+POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+POWERLEVEL9K_RPROMPT_ON_NEWLINE=false
 
 POWERLEVEL9K_DIR_HOME_BACKGROUND='39'
 POWERLEVEL9K_DIR_DEFAULT_BACKGROUND='39'
@@ -34,7 +47,7 @@ POWERLEVEL9K_DIR_DEFAULT_FOREGROUND='236'
 POWERLEVEL9K_DIR_HOME_SUBFOLDER_FOREGROUND='236'
 
 
-POWERLEVEL9K_VCS_GIT_ICON=''
+#POWERLEVEL9K_VCS_GIT_ICON=''
 POWERLEVEL9K_VCS_STAGED_ICON='\u00b1'
 POWERLEVEL9K_VCS_UNTRACKED_ICON='\u25CF'
 POWERLEVEL9K_VCS_UNSTAGED_ICON='\u00b1'
@@ -48,6 +61,11 @@ POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='214'
 POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND='236'
 POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='196'
 POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='236'
+
+#New elements
+POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=""
+POWERLEVEL9K_MULTILINE_SECOND_PROMPT_PREFIX=" ❯ "
+
 
 #POWERLEVEL9K_VCS_GIT_ICON=''
 #POWERLEVEL9K_VCS_STAGED_ICON='\u00b1'
@@ -153,7 +171,9 @@ function paste() {
 
 # ssh
 export SSH_KEY_PATH="~/.ssh/rsa_id"
-export PATH=$PATH:~/Android/Sdk/tools/bin/
+export PATH=$PATH:$HOME/Android/Sdk/tools/bin/
+export PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
+export PATH=$PATH:$HOME/.cargo/bin/
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -167,6 +187,9 @@ alias adb="/home/ian/Android/Sdk/platform-tools/adb"
 alias man="viman"
 alias ws="cd ~/Documents/Workspace"
 alias prettyjson="python -m json.tool"
+alias vim=nvim
+alias vi=nvim
+alias lc=colorls
 
 # OPAM configuration
 . /home/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
