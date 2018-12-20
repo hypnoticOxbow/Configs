@@ -1,8 +1,13 @@
+XTerm.vt100.faceName: Liberation Mono:size=10:antialias=false
+XTerm.vt100.font: 7x13
+
+
 !Urxvt
  URxvt*buffered: true
  URxvt*cursorBlink: true
  URxvt*underlineColor: yellow
- URxvt*font:  xft:PragmataPro for Powerline:size=12:antialias=true, xft:FontAwesome:style=Regular
+ URxvt*font:  xft:FuraMono Nerd Font Mono:style=Regular:size=10:antialias=true, xft:octicons:style=Medium:size=12
+ URxvt*letterSpace: 0
  URxvt*depth: 32
  URxvt*borderless: 0
  URxvt*internalBorder: 0
@@ -14,14 +19,21 @@
  URxvt*saveLines: 5000
  URxvt*termName: rxvt-unicode
  URxvt.perl-ext-common: default,matcher
- URxvt.urlLauncher: vivaldi
+ URxvt.urlLauncher: /usr/bin/vivaldi-stable
  URxvt.matcher.button: 1
  URxvt.perl-ext: default,url-select
  URxvt.keysym.M-u: perl:url-select:select_next
  URxvt.url-select.launcher: /usr/bin/vivaldi-stable
  URxvt.url-select.underline: true
 
- Xft.dpi: 144
+! Fonts {{{
+Xft.antialias: true
+Xft.hinting:   true
+Xft.rgba:      rgb
+Xft.hintstyle: hintfull
+Xft.dpi:       220
+! }}}
+
 
 
 ! X11 colors pieced together by Dmitry Medvinsky.

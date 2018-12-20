@@ -14,6 +14,7 @@ GEM_HOME=$(ls -t -U | ruby -e 'puts Gem.user_dir')
 GEM_PATH=$GEM_HOME
 export PATH=$PATH:$GEM_HOME/bin
 
+export PASSWORD_STORE_CLIP_TIME=1000
 
 
 
@@ -33,7 +34,7 @@ POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 #POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir dir_writable_joined vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time background_jobs virtualenv rbenv rvm time)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time background_jobs virtualenv rvm time)
 POWERLEVEL9K_STATUS_VERBOSE=false
 
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true
@@ -134,18 +135,12 @@ POWERLEVEL9K_MULTILINE_SECOND_PROMPT_PREFIX=" ❯ "
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(colorize cp dirhistory sudo git compleat archlinux httpie common-aliases sudo pacman pass zsh-syntax-highlighting last-working-dir)
-
-
-#Original Verison -- Uncomment to restore back to original
-#plugins=(git compleat sprunge archlinux common-aliases sudo pacman pass last-working-dir)
-
+plugins=(sudo git compleat archlinux common-aliases pass last-working-dir autojump)
 
 
 
 
 source $ZSH/oh-my-zsh.sh
-
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -161,6 +156,8 @@ source $ZSH/oh-my-zsh.sh
  fi
 
 
+function ::() {python -c "from math import *; print($*)"}
+
 
 function paste() {
   local file=${1:-/dev/stdin}
@@ -171,10 +168,7 @@ function paste() {
 
 # ssh
 export SSH_KEY_PATH="~/.ssh/rsa_id"
-export PATH=$PATH:$HOME/Android/Sdk/tools/bin/
-export PATH="$(ruby -e 'print Gem.user_dir')/bin:$PATH"
-export PATH=$PATH:$HOME/.cargo/bin/
-
+export PATH=$HOME/bin:$PATH:$HOME/.cargo/bin/:$HOME/.local/bin/
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -183,13 +177,31 @@ export PATH=$PATH:$HOME/.cargo/bin/
 # Example aliases
 alias clip="xclip -selection clipboard -i"
 alias spotify="spotify --force-device-scale-factor=2"
-alias adb="/home/ian/Android/Sdk/platform-tools/adb"
 alias man="viman"
+alias pacman="pacman --color auto"
 alias ws="cd ~/Documents/Workspace"
+alias sch="cd ~/Documents/School/2018-Fall/"
+alias prettyjson="python -m json.tool"
+alias lc='colorls'
+alias lct='colorls -A --sd --tree'
 alias prettyjson="python -m json.tool"
 alias vim=nvim
 alias vi=nvim
-alias lc=colorls
+alias ls=exa
 
-# OPAM configuration
-. /home/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+alias loadnvm=". $HOME/.nvm/nvm.sh"
+## OPAM configuration
+#. /home/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+#source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+## Virtual ENV
+#export WORKON_HOME=~/.virtualenvs
+#source /usr/bin/virtualenvwrapper.sh
+#
+#export NVM_DIR="$HOME/.nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+#[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+#Opam init
+test -r /home/ian/.opam/opam-init/init.zsh && . /home/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+
+source /home/ian/build/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

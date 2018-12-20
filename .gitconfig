@@ -1,0 +1,28 @@
+[user]
+	email = i.kariniemi@gmail.com
+	name = Ian Kariniemi
+[credential]
+	helper = cache --timeout=3600
+[core]
+	editor = nvim
+[color]
+    branch = auto
+    diff = auto
+    status = auto
+[alias]
+    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+    ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+    f = "!git ls-files | grep -i"
+    grep = grep -Ii
+    sl = stash list
+    sa = stash apply
+    ss = stash save
+    dlc = diff --cached HEAD^
+    diff = diff --word-diff
+
+    gra = "!f() { A=$(pwd) && TOPLEVEL=$(git rev-parse --show-toplevel) && cd $TOPLEVEL && git grep --full-name -In $1 | xargs -I{} echo $TOPLEVEL/{} && cd $A; }; f"
+    undo = "!f() { git reset --hard $(git rev-parse --abbrev-ref HEAD)@{${1-1}}; }; f"
+    # conflict/merges
+    ours = "!f() { git co --ours $@ && git add $@; }; f"
+    theirs = "!f() { git co --theirs $@ && git add $@; }; f"
+    new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
