@@ -34,6 +34,8 @@ Xft.hintstyle: hintfull
 Xft.dpi:       220
 ! }}}
 
+! rofi
+rofi.dpi: 220
 
 
 ! X11 colors pieced together by Dmitry Medvinsky.

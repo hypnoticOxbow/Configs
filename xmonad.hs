@@ -23,11 +23,15 @@
     import XMonad.Config.Desktop (desktopLayoutModifiers)
     --import XMonad.Config.Xfce
     import XMonad.Hooks.EwmhDesktops (ewmh) -- for touchegg
+    import XMonad.Hooks.FadeInactive (fadeInactiveLogHook)
     import XMonad.Hooks.ManageDocks
-    import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat)
+    import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat, doRectFloat)
     import XMonad.Hooks.SetWMName (setWMName)
-    --import System.Taffybar.Hooks.PagerHints (pagerHints)
     import XMonad.Layout.NoBorders (smartBorders)
+  --added for spacing
+    import XMonad.Layout.Gaps
+    import XMonad.Layout.Spacing
+
     import XMonad.Layout.WindowArranger (windowArrange)
     import XMonad.Layout.WindowNavigation (Navigate(Go, Swap), Direction2D(U, R, D, L), windowNavigation)
 
@@ -42,8 +46,17 @@
     import qualified XMonad.StackSet as W
     import qualified Data.Map        as Map
 
-
     myTerminal = "kitty"
+
+    fconsoleName :: String
+    fconsoleName = "fconsole"
+
+
+    floatingConsole :: String
+    floatingConsole =  myTerminal
+                    ++ " -name " ++ fconsoleName
+                    ++ " -e bash --rcfile /home/ian/.bashrc_console"
+
     myScratchPadTerminal = "urxvt"
     setKeyboardMapping :: X ()
     setKeyboardMapping = spawn "setxkbmap -layout us \
@@ -53,9 +66,6 @@
         \&& xmodmap -e 'keycode 135 = Super_L' \
         \&& xset m 0 0"
 
-
-    resetBackground :: X ()
-    resetBackground = spawn "nitrogen --restore"
 
     --myMouseBindings = [ ( ( 0, button1 ), mouseGesture gestures ) ]
 
@@ -94,11 +104,12 @@
         , ((modm,               xK_Up),    prevWS)
         , ((modm .|. shiftMask, xK_Down),  shiftToNext)
         , ((modm .|. shiftMask, xK_Up),    shiftToPrev)
-        , ((modm,               xK_f     ), spawn "dmenu_run -fn '-*-clean-*-*-*-*-35-*'")
+        , ((modm,               xK_f     ), spawn "rofi -show run")
 
     -- close focused window
         , ((modm, xK_x     ), kill)
         , ((modm, xK_o ), scratchpadSpawnActionTerminal myScratchPadTerminal)
+        , ((modm, xK_c ), spawn floatingConsole)
     -- Rotate through the available layout algorithms
         , ((modm,               xK_space ), sendMessage NextLayout)
     --  Reset the layouts on the current workspace to default
@@ -145,7 +156,7 @@
         , ((modm,               xK_v     ), spawn "playerctl previous")
 
     --Passmenu Coolness
-        , ((modm,               xK_p     ), spawn "sh ~/.local/bin/passmenu")
+        , ((modm,               xK_p     ), spawn "rofi-pass")
 
     --i3lock -- screensaver
         , ((modm .|. controlMask, xK_l     ), spawn "i3lock-fancy -pf Fura-Code-Regular-Nerd-Font-Complete-Mono -t \"Incitatus - karin010\"")
@@ -181,12 +192,23 @@
  --- you may also bind events to the mouse scroll wheel (button4 and button5)
  -        ]-}
 
-    myLayout = avoidStruts $ windowArrange $ windowNavigation $ desktopLayoutModifiers $ smartBorders $ tiled ||| Mirror tiled ||| Full
-        where
-        tiled   = Tall nmaster delta ratio -- default tiling algorithm partitions the screen into two panes
-        nmaster = 1 -- The default number of windows in the master pane
-        ratio   = 1/2 -- Default proportion of screen occupied by master pane
-        delta   = 3/100 -- Percent of screen to increment by when resizing panes
+
+
+    myLayout = avoidStruts $ gaps [(U, 20), (R, 10), (L, 10), (D, 20)] $ smartSpacing 12 $ windowNavigation  $ (tiled ||| Mirror tiled ||| Full)
+                   where
+                       tiled = Tall nmaster delta ratio
+                       nmaster = 1
+                       ratio = 1/2
+                       delta = 3/100
+
+    --myLayout = avoidStruts $ windowArrange $ windowNavigation $ desktopLayoutModifiers $ smartBorders $ tiled ||| Mirror tiled --- ||| Full ||| myGaps (Tall 1 (3 / 100) (1 / 2))
+        --where
+        --tiled   = Tall nmaster delta ratio -- default tiling algorithm partitions the screen into two panes
+        --nmaster = 1 -- The default number of windows in the master pane
+        --ratio   = 1/2 -- Default proportion of screen occupied by master pane
+        --delta   = 3/100 -- Percent of screen to increment by when resizing panes
+        --myGaps = lessBorders OnlyFloat . avoidStruts . spacing 15 . gaps
+          --[(U, 15), (D, 15), (R, 15), (L, 15)]
 {-myIcons layout
  -    | is "Mirror ResizableTall"     = "<icon=/home/ian/.xmonad/icons/layout-mirror.xbm/>"
  -    | is "ResizableTall"            = "<icon=/home/ian/.xmonad/icons/layout-tall.xbm/>"
@@ -215,13 +237,13 @@
 
     myManageHook = composeAll
         [ checkDock                     --> doIgnore
-        , className =? "MPlayer"        --> doFloat
         , className =? "Vivaldi-stable" --> doShift "2"
         , className =? "vivaldi-stable" --> doShift "2"
         , className =? "Signal"         --> doShift "3"
         , className =? "yakuake"        --> doFloat
         , className =? "Yakuake"        --> doFloat
         , className =? "Kmix"           --> doFloat
+        , appName   =? fconsoleName       --> doRectFloat (W.RationalRect 0.191 0.86 0.618 0.10)
         , className =? "kmix"           --> doFloat
         , title     =? "plasma"         --> doFloat
         , title     =? "Plasma"         --> doFloat
@@ -252,6 +274,15 @@
 --  io $ writeIORef index (mod (val + 1) (fromIntegral (length rotationStates)))
     --  spawn $ "xrandr --output eDP1 --rotate " ++ rotationStates!!(fromIntegral val)
 
+    myLogHook xmproc = do
+      fadeInactiveLogHook 0.9
+      dynamicLogWithPP $ xmobarPP
+        { ppOutput  = hPutStrLn xmproc
+        , ppTitle = xmobarColor "#c678dd" "" . shorten 50       -- #9BC1B2 #69DFFA
+        , ppLayout = xmobarColor "#ECBE7B" "" . myIcons
+        , ppCurrent = xmobarColor "#51afef" "" . wrap "[" "]"   -- #9BC1B2 #69DFFA
+        , ppSep     = "   "
+        }
 
     main = do
            xmproc <- spawnPipe "/home/ian/.local/bin/xmobar"
@@ -266,19 +297,12 @@
             clickJustFocuses   = False,
             borderWidth        = 1,
             keys               = myKeys,
-            logHook            = dynamicLogWithPP xmobarPP
-                      { ppOutput = hPutStrLn xmproc
-                     , ppCurrent = xmobarColor "#51afef" "" . wrap "[" "]"   -- #9BC1B2 #69DFFA
-                     , ppTitle = xmobarColor "#c678dd" "" . shorten 50       -- #9BC1B2 #69DFFA
-                     , ppLayout = xmobarColor "#ECBE7B" "" . myIcons }
+            logHook            = myLogHook xmproc
             , layoutHook         = myLayout
             , manageHook         = manageScratchPad <+> myManageHook <+> manageHook def,
                 startupHook = do
                     setKeyboardMapping
+                    spawn "compton --config ~/.compton.conf"
                     spawn "~/.local/bin/butler"
-                    --spawn "~/.local/bin/waitpanels.sh"
-                    -- For Java programs (prevents blank screen)
                     setWMName "LG3D"
-                    resetBackground
-                    --spawn "wmname LG3D"
            }

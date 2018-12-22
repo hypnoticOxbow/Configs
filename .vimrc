@@ -184,7 +184,8 @@ let g:LanguageClient_serverCommands = {
             \'ocaml': ['/home/ian/.nvm/versions/node/v10.10.0/bin/ocaml-language-server', '--stdio'],
             \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
             \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
-            \ 'javascript': ['/home/ian/.nvm/versions/node/v10.10.0/bin/node', '/home/ian/build/javascript-typescript-langserver/lib/language-server-stdio']
+            \ 'javascript': ['/home/ian/.nvm/versions/node/v10.10.0/bin/node', '/home/ian/build/javascript-typescript-langserver/lib/language-server-stdio'],
+            \ 'rust': ['rls']
             \ }
 
 "autocmd FileType ocaml au VimEnter * LanguageClientStart
