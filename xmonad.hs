@@ -15,7 +15,6 @@
 
     import XMonad
     import Data.IORef (IORef(..), newIORef, readIORef, writeIORef)
-    --import Foreign (unsafePerformIO)
     import XMonad.Actions.CycleWS (nextWS, prevWS, shiftToNext, shiftToPrev)
     import XMonad.Actions.MouseGestures
     import XMonad.Actions.PhysicalScreens (viewScreen, sendToScreen)
@@ -46,6 +45,7 @@
     import qualified XMonad.StackSet as W
     import qualified Data.Map        as Map
 
+    myTerminal :: String
     myTerminal = "kitty"
 
     fconsoleName :: String
@@ -66,6 +66,25 @@
         \&& xmodmap -e 'keycode 135 = Super_L' \
         \&& xset m 0 0"
 
+--------------------------------------------------------------------------------
+-- Multi-Screen                                                               --
+--------------------------------------------------------------------------------
+
+    --cmdXrandrExt :: String
+    --cmdXrandrExt = "~/.xmonad/displaymgt.sh"
+--
+    --cmdXrandrMir :: String
+    --cmdXrandrMir = "~/.xmonad/displaymgt.sh --mirror"
+
+    --rescreenExt :: X ()
+    --rescreenExt = do
+        --wsCurrent <- gets (W.currentTag . windowset)
+        --windows $ W.view wsGrave
+        --windows $ W.view wsCurrent
+        --spawn   $ cmdXrandrExt ++ ";" ++ cmdSetWallpaper
+
+    --rescreenMir :: X ()
+    --rescreenMir = spawn $ cmdXrandrMir ++ ";" ++ cmdSetWallpaper
 
     --myMouseBindings = [ ( ( 0, button1 ), mouseGesture gestures ) ]
 
@@ -104,7 +123,7 @@
         , ((modm,               xK_Up),    prevWS)
         , ((modm .|. shiftMask, xK_Down),  shiftToNext)
         , ((modm .|. shiftMask, xK_Up),    shiftToPrev)
-        , ((modm,               xK_f     ), spawn "rofi -show run")
+        , ((modm,               xK_f     ), spawn "rofi -show run -theme glue_pro_blue")
 
     -- close focused window
         , ((modm, xK_x     ), kill)
@@ -148,15 +167,20 @@
     --Touchpad
         , ((modm .|. shiftMask, xK_m     ), spawn "xinput enable 'SYNA2B31:00 06CB:7F8B Touchpad'")
         , ((modm,               xK_m     ), spawn "xinput disable 'SYNA2B31:00 06CB:7F8B Touchpad'")
+    --displaymgt
+        , ((modm .|. shiftMask, xK_d     ), spawn "sh /home/ian/.local/bin/displaymgt")
+        , ((modm .|. controlMask, xK_d     ), spawn "sh /home/ian/.local/bin/displaymgt --mirrored")
     --Screenshot
-        , ((modm .|. controlMask, xK_s     ), spawn "sh ~/.local/bin/screenshotFull")
+        , ((modm .|. controlMask, xK_s     ), spawn "sh ~/.local/bin/screenshot")
+    --Timesheet time in
+        , ((modm,  xK_t   ), spawn "/home/ian/.local/bin/tmst-gui")
     --Music Player hotkeys
         , ((modm,               xK_n     ), spawn "playerctl next")
         , ((modm,               xK_b     ), spawn "playerctl play-pause")
         , ((modm,               xK_v     ), spawn "playerctl previous")
 
     --Passmenu Coolness
-        , ((modm,               xK_p     ), spawn "rofi-pass")
+        , ((modm,               xK_p     ), spawn "passmenu")
 
     --i3lock -- screensaver
         , ((modm .|. controlMask, xK_l     ), spawn "i3lock-fancy -pf Fura-Code-Regular-Nerd-Font-Complete-Mono -t \"Incitatus - karin010\"")
@@ -175,26 +199,26 @@
             [xK_q, xK_w, xK_e, xK_r] ++
             [xK_5 .. xK_9] ++
             [xK_0, xK_minus, xK_equal, xK_grave])
-            , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+            , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
     ------------------------------------------------------------------------
     -- Mouse bindings: default actions bound to mouse events
     --
-{-    myMouseBindings (XConfig {XMonad.modMask = modm}) = Map.fromList $
- -    -- mod-button1, Set the window to floating mode and move by dragging
- -        [ ((modm .|. controlMask, button1), (\w -> focus w >> mouseMoveWindow w
- -                >> windows W.shiftMaster))
- -    -- mod-button2, Raise the window to the top of the stack
- -{-, ((modm, button2), (\w -> focus w >> windows W.shiftMaster))-}
- --- mod-button3, Set the window to floating mode and resize by dragging
- -        , ((modm .|. controlMask, button3), (\w -> focus w >> mouseResizeWindow w
- -            >> windows W.shiftMaster))
- --- you may also bind events to the mouse scroll wheel (button4 and button5)
- -        ]-}
+    myMouseBindings (XConfig {XMonad.modMask = modm}) = Map.fromList $
+    -- mod-button1, Set the window to floating mode and move by dragging
+        [ ((modm .|. controlMask, button1), (\w -> focus w >> mouseMoveWindow w
+                >> windows W.shiftMaster))
+    -- mod-button2, Raise the window to the top of the stack
+        , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
+-- mod-button3, Set the window to floating mode and resize by dragging
+        , ((modm .|. controlMask, button3), (\w -> focus w >> mouseResizeWindow w
+            >> windows W.shiftMaster))
+-- you may also bind events to the mouse scroll wheel (button4 and button5)
+        ]
 
 
 
-    myLayout = avoidStruts $ gaps [(U, 20), (R, 10), (L, 10), (D, 20)] $ smartSpacing 12 $ windowNavigation  $ (tiled ||| Mirror tiled ||| Full)
+    myLayout = avoidStruts $ gaps [(U, 30), (R, 15), (L, 15), (D, 30)] $ spacingRaw True (Border 0 10 10 10) True (Border 10 10 10 10) True $ windowNavigation  $ (tiled ||| Mirror tiled ||| Full)
                    where
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
@@ -237,8 +261,10 @@
 
     myManageHook = composeAll
         [ checkDock                     --> doIgnore
-        , className =? "Vivaldi-stable" --> doShift "2"
-        , className =? "vivaldi-stable" --> doShift "2"
+        -- , className =? "Vivaldi-stable" --> doShift "2"
+        -- , className =? "vivaldi-stable" --> doShift "2"
+        -- , className =? "firefox"        --> doShift "2"
+        -- , className =? "Firefox"        --> doShift "2"
         , className =? "Signal"         --> doShift "3"
         , className =? "yakuake"        --> doFloat
         , className =? "Yakuake"        --> doFloat
@@ -275,7 +301,7 @@
     --  spawn $ "xrandr --output eDP1 --rotate " ++ rotationStates!!(fromIntegral val)
 
     myLogHook xmproc = do
-      fadeInactiveLogHook 0.9
+      --fadeInactiveLogHook 0.9
       dynamicLogWithPP $ xmobarPP
         { ppOutput  = hPutStrLn xmproc
         , ppTitle = xmobarColor "#c678dd" "" . shorten 50       -- #9BC1B2 #69DFFA
@@ -286,7 +312,6 @@
 
     main = do
            xmproc <- spawnPipe "/home/ian/.local/bin/xmobar"
-
            xmonad $ docks $ ewmh $ def {
             terminal = myTerminal,
             modMask  = mod4Mask, -- Windows key
@@ -301,8 +326,7 @@
             , layoutHook         = myLayout
             , manageHook         = manageScratchPad <+> myManageHook <+> manageHook def,
                 startupHook = do
-                    setKeyboardMapping
                     spawn "compton --config ~/.compton.conf"
                     spawn "~/.local/bin/butler"
-                    setWMName "LG3D"
+                    --setWMName "LG3D"
            }

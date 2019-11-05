@@ -5,6 +5,7 @@
 	helper = cache --timeout=3600
 [core]
 	editor = nvim
+	trustctime = false
 [color]
     branch = auto
     diff = auto
@@ -26,3 +27,22 @@
     ours = "!f() { git co --ours $@ && git add $@; }; f"
     theirs = "!f() { git co --theirs $@ && git add $@; }; f"
     new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
+[oh-my-zsh]
+	hide-status = 1
+[github "umn"]
+	edu = git.tb.int
+[hub]
+	host = github.umn.edu
+	protocol = https
+[push]
+	default = matching
+[github "umn.edu/api/v3"]
+	user = karin010
+[github]
+	user = hypnoticOxbow
+[svn-remote "svn"]
+	automkdirs = false
+[status]
+	submoduleSummary = true
+[diff]
+	submodule = log

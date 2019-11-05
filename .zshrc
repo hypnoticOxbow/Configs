@@ -1,5 +1,5 @@
-
 export TERM="xterm-256color"
+
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -8,15 +8,29 @@ export TERM="xterm-256color"
 export ZSH=/home/ian/.oh-my-zsh
 
 
+# --files: List files that would be searched but do not search
+# --no-ignore: Do not respect .gitignore, etc...
+# --hidden: Search hidden files and folders
+# --follow: Follow symlinks
+# --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
+
+
+
 #Ruby gems stuff
 #Setting the GEM_PATH and GEM_HOME variables may not be necessary, check 'gem env' output to verify whether both variables already exist
 GEM_HOME=$(ls -t -U | ruby -e 'puts Gem.user_dir')
 GEM_PATH=$GEM_HOME
 export PATH=$PATH:$GEM_HOME/bin
 
+
+
 export PASSWORD_STORE_CLIP_TIME=1000
 
-
+#Neo-fuzz stuff
+export HOST_NEO_FUZZ_HOME=$HOME/workspace/Sift/nf-git/
+export NEO_FUZZ_HOME=/neo-fuzz
+export NEO_FUZZ_SLIME_PORT=6452
 
 
 # Set name of the theme to load. Optionally, if you set this to "random"
@@ -32,9 +46,13 @@ POWERLEVEL9K_MODE='awesome-fontconfig'
 
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 #POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
-
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir dir_writable_joined vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time background_jobs virtualenv rvm time)
+if [ -n "${CHECKGIT+x}" ]; then
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir dir_writable_joined vcs)
+else
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir dir_writable_joined)
+fi
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(root_indicator context dir dir_writable_joined)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time background_jobs rvm time)
 POWERLEVEL9K_STATUS_VERBOSE=false
 
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true
@@ -121,7 +139,7 @@ POWERLEVEL9K_MULTILINE_SECOND_PROMPT_PREFIX=" ❯ "
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+ DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -135,7 +153,8 @@ POWERLEVEL9K_MULTILINE_SECOND_PROMPT_PREFIX=" ❯ "
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(sudo git compleat archlinux common-aliases pass last-working-dir autojump)
+# removed: git, because svn is slow otherwise
+plugins=(sudo archlinux common-aliases last-working-dir autojump)
 
 
 
@@ -155,48 +174,120 @@ source $ZSH/oh-my-zsh.sh
    export EDITOR='nvim'
  fi
 
+autoload -Uz compinit
+
+for dump in ~/.zcompdump(N.mh+24); do
+  compinit
+done
+
+compinit -C
+
+#autoload -Uz compinit
+#compinit
+## Completion for kitty
+#kitty + complete setup zsh | source /dev/stdin
+
+function until_ok() {until ($0); do slee .2; done };
+
+function ecw() {emacsclient --c $* &}
 
 function ::() {python -c "from math import *; print($*)"}
 
+function gt() {GIT_AUTHOR_DATE=$1 GIT_COMMITTER_DATE=$1 git commit}
+
+function yt() {youtube-dl -o - $* | castnow --quiet -}
+
+function nc() {pandoc $1 -o `echo $1 | cut -d '.' -f1`.pdf --from markdown --template eisvogel --listings}
+
+function mt() {
+  cp -rf /home/ian/Documents/School/2019-Spring/5161/public-class-repo/Testing/CorrectOutput/Translation-to-IR/Translation-to-IR-Extras/phase5/$1.* /home/ian/Documents/School/2019-Spring/5161/public-class-repo/Testing/CorrectOutput/Translation-to-IR/Initial/;
+  cp -rf /home/ian/Documents/School/2019-Spring/5161/public-class-repo/Testing/TestCases/Translation-to-IR-Extras/phase5/$1.tig /home/ian/Documents/School/2019-Spring/5161/public-class-repo/Testing/TestCases/Initial/
+}
 
 function paste() {
   local file=${1:-/dev/stdin}
-    curl --data-binary @${file} https://paste.rs
+    curl --data-binary @${file} https://p.acm.umn.edu/
           }
+# fh - repeat history
+fh() {
+  print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed -r 's/ *[0-9]*\*? *//' | sed -r 's/\\/\\\\/g')
+}
+
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
-export SSH_KEY_PATH="~/.ssh/rsa_id"
-export PATH=$HOME/bin:$PATH:$HOME/.cargo/bin/:$HOME/.local/bin/
+export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
+export PATH=$HOME/.local/bin:$HOME/bin:/home/ian/.opam/4.06.0/bin/:/home/ian/workspace/router/openwrt/staging_dir/toolchain-mips_24kc_gcc-8.3.0_musl/bin:$PATH:$HOME/.cargo/bin/:$HOME/workspace/Sift/neo-fuzz/trunk/code/tools/
+export PATH=$PATH:/opt/ros/melodic/bin
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
 #
-# Example aliases
-alias clip="xclip -selection clipboard -i"
+#Sift Aliases
+alias cdr='cd `/bin/ls -d -1 -t /home/ian/workspace/Sift/neo-fuzz/trunk/code/test/results/* |head -1`'
+alias st='svn st | grep . | grep -v "^[?X]" | grep -v "Performing status"'
+
+alias clip='xargs echo -n | xclip -selection clipboard -i'
 alias spotify="spotify --force-device-scale-factor=2"
 alias man="viman"
 alias pacman="pacman --color auto"
 alias ws="cd ~/Documents/Workspace"
-alias sch="cd ~/Documents/School/2018-Fall/"
-alias prettyjson="python -m json.tool"
-alias lc='colorls'
+alias sch="cd ~/Documents/School/2019-Fall/"
+alias nf="cd ~/workspace/Sift/nf-git/code/"
+alias sft="cd ~/workspace/Sift"
+alias hom="cd ~/workspace/Sift/homer"
+alias svnls="svn st | cut -c 9-"
+alias lc='lsd'
 alias lct='colorls -A --sd --tree'
 alias prettyjson="python -m json.tool"
 alias vim=nvim
 alias vi=nvim
-alias ls=exa
+alias cat='bat'
+alias batp='bat --paging=never'
+alias ls='lsd'
+alias l='ls -l'
+alias la='ls -a'
+alias lla='ls -la'
+alias lt='ls --tree'
+alias cg="export CHECKGIT=1"
+alias ncg="unset CHECKGIT"
+alias n="vim ~/.list.todo"
+alias ecwt='emacsclient --c -nw $*'
 
+alias aerc='TERM=xterm aerc'
+alias tmux='TERM=xterm-256color tmux'
+
+alias mutt='cd ~/.attachments && neomutt'
+alias neomutt='cd ~/.attachments && neomutt'
 
 alias loadnvm=". $HOME/.nvm/nvm.sh"
+
+#ssh tmux
+scamm() { eval $(ssh-agent) && mosh ikariniemi@scamm0 -- tmux attach -t 0 }
+
+rhimes() { eval $(ssh-agent) && mosh ikariniemi@rhimes0 -- tmux attach -t 0 }
+
+achilles() { eval $(ssh-agent) && mosh ikariniemi@achilles -- tmux attach -t 0 }
+
+argo() { eval $(ssh-agent) && mosh ian@argo.acm.umn.edu -- tmux attach -t 0 }
+
 ## OPAM configuration
 #. /home/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 #source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ## Virtual ENV
-#export WORKON_HOME=~/.virtualenvs
+export WORKON_HOME=~/.virtualenvs
+#source ~/.zshrc.virtualenvwrapper
 #source /usr/bin/virtualenvwrapper.sh
+#
+#SIFT Neo-Fuzz Config
+export CIRCA_BASEPORT=6440
+export CIRCA_BASENAME=ian
+
+source /usr/bin/virtualenvwrapper_lazy.sh
+
+
 #
 #export NVM_DIR="$HOME/.nvm"
 #[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -205,3 +296,36 @@ alias loadnvm=". $HOME/.nvm/nvm.sh"
 test -r /home/ian/.opam/opam-init/init.zsh && . /home/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
 source /home/ian/build/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+cat ~/.list.todo | grep '\[ \]'
+
+#PATH="/home/ian/perl5/bin${PATH:+:${PATH}}"; export PATH;
+#PERL5LIB="/home/ian/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+#PERL_LOCAL_LIB_ROOT="/home/ian/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+#PERL_MB_OPT="--install_base \"/home/ian/perl5\""; export PERL_MB_OPT;
+#PERL_MM_OPT="INSTALL_BASE=/home/ian/perl5"; export PERL_MM_OPT;
+#
+
+
+
+function countTimeDiff() {
+    timeA=$1 # 09:59:35
+    timeB=$2 # 17:32:55
+
+    # feeding variables by using read and splitting with IFS
+    IFS=: read ah am as <<< "$timeA"
+    IFS=: read bh bm bs <<< "$timeB"
+
+    # Convert hours to minutes.
+    # The 10# is there to avoid errors with leading zeros
+    # by telling bash that we use base 10
+    secondsA=$((10#$ah*60*60 + 10#$am*60 + 10#$as))
+    secondsB=$((10#$bh*60*60 + 10#$bm*60 + 10#$bs))
+    DIFF_SEC=$((secondsB - secondsA))
+    echo "The difference is $DIFF_SEC seconds.";
+
+    SEC=$(($DIFF_SEC%60))
+    MIN=$((($DIFF_SEC-$SEC)%3600/60))
+    HRS=$((($DIFF_SEC-$MIN*60)/3600))
+    TIME_DIFF="$HRS:$MIN:$SEC";
+    echo $TIME_DIFF;
+}
