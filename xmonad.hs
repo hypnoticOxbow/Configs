@@ -269,6 +269,8 @@
         , className =? "yakuake"        --> doFloat
         , className =? "Yakuake"        --> doFloat
         , className =? "Kmix"           --> doFloat
+        , className =? "Zoom"           --> doFloat
+        , className =? "zoom"           --> doFloat
         , appName   =? fconsoleName       --> doRectFloat (W.RationalRect 0.191 0.86 0.618 0.10)
         , className =? "kmix"           --> doFloat
         , title     =? "plasma"         --> doFloat

@@ -154,7 +154,7 @@ POWERLEVEL9K_MULTILINE_SECOND_PROMPT_PREFIX=" ❯ "
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 # removed: git, because svn is slow otherwise
-plugins=(sudo archlinux common-aliases last-working-dir autojump)
+plugins=(sudo archlinux last-working-dir autojump)
 
 
 
@@ -187,9 +187,17 @@ compinit -C
 ## Completion for kitty
 #kitty + complete setup zsh | source /dev/stdin
 
-function until_ok() {until ($0); do slee .2; done };
 
-function ecw() {emacsclient --c $* &}
+command_exists() {
+	command -v ${1} >/dev/null;
+};
+must() {
+	until ($@); do true; done
+};
+
+function until_ok() {until ($0); do sleep .2; done };
+
+function ecw() {emacs $* &}
 
 function ::() {python -c "from math import *; print($*)"}
 
@@ -198,11 +206,6 @@ function gt() {GIT_AUTHOR_DATE=$1 GIT_COMMITTER_DATE=$1 git commit}
 function yt() {youtube-dl -o - $* | castnow --quiet -}
 
 function nc() {pandoc $1 -o `echo $1 | cut -d '.' -f1`.pdf --from markdown --template eisvogel --listings}
-
-function mt() {
-  cp -rf /home/ian/Documents/School/2019-Spring/5161/public-class-repo/Testing/CorrectOutput/Translation-to-IR/Translation-to-IR-Extras/phase5/$1.* /home/ian/Documents/School/2019-Spring/5161/public-class-repo/Testing/CorrectOutput/Translation-to-IR/Initial/;
-  cp -rf /home/ian/Documents/School/2019-Spring/5161/public-class-repo/Testing/TestCases/Translation-to-IR-Extras/phase5/$1.tig /home/ian/Documents/School/2019-Spring/5161/public-class-repo/Testing/TestCases/Initial/
-}
 
 function paste() {
   local file=${1:-/dev/stdin}
@@ -213,13 +216,17 @@ fh() {
   print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed -r 's/ *[0-9]*\*? *//' | sed -r 's/\\/\\\\/g')
 }
 
+
+
+function spotifydl() {docker run --rm -it -v $(pwd):/music ritiek/spotify-downloader $*}
+
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
 export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 export PATH=$HOME/.local/bin:$HOME/bin:/home/ian/.opam/4.06.0/bin/:/home/ian/workspace/router/openwrt/staging_dir/toolchain-mips_24kc_gcc-8.3.0_musl/bin:$PATH:$HOME/.cargo/bin/:$HOME/workspace/Sift/neo-fuzz/trunk/code/tools/
-export PATH=$PATH:/opt/ros/melodic/bin
+export PATH=$PATH:$HOME/.emacs.d/bin/
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -255,6 +262,7 @@ alias cg="export CHECKGIT=1"
 alias ncg="unset CHECKGIT"
 alias n="vim ~/.list.todo"
 alias ecwt='emacsclient --c -nw $*'
+alias wgetall='wget -r -nH --cut-dirs=2 --no-parent --reject="index.html*" '
 
 alias aerc='TERM=xterm aerc'
 alias tmux='TERM=xterm-256color tmux'
@@ -263,6 +271,7 @@ alias mutt='cd ~/.attachments && neomutt'
 alias neomutt='cd ~/.attachments && neomutt'
 
 alias loadnvm=". $HOME/.nvm/nvm.sh"
+
 
 #ssh tmux
 scamm() { eval $(ssh-agent) && mosh ikariniemi@scamm0 -- tmux attach -t 0 }
@@ -284,6 +293,11 @@ export WORKON_HOME=~/.virtualenvs
 #SIFT Neo-Fuzz Config
 export CIRCA_BASEPORT=6440
 export CIRCA_BASENAME=ian
+#Homer Arcade config
+export HOMER_HOME=$HOME/workspace/Sift/homer-new/code
+export ARCADE_HOME=$HOME/workspace/Sift/homer-new/code/components/arcade
+export LISP_EXEC=alisp
+export LISP_LOAD="-L"
 
 source /usr/bin/virtualenvwrapper_lazy.sh
 
