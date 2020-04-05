@@ -3,6 +3,7 @@ cp ~/.xmonad/xmonad.hs ./
 cp ~/.config/nvim/init.vim ./.vimrc
 cp ~/.bashrc ./
 cp ~/.zshrc ./
+cp -r ~/.doom.d/ ./
 cp ~/.Xresources ./
 cp ~/.gitconfig ./
 cp ~/.compton.conf ./
