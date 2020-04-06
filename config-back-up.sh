@@ -1,5 +1,6 @@
 set -euxo pipefail
 cp ~/.xmonad/xmonad.hs ./
+cp ~/.xmobarrc ./
 cp ~/.config/nvim/init.vim ./.vimrc
 cp ~/.bashrc ./
 cp ~/.zshrc ./

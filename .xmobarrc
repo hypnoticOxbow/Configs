@@ -1,0 +1,37 @@
+Config {
+       font = "xft:Hack:size=10:bold:antialias=true"
+       , bgColor = "#282c34"
+       , fgColor = "#bbc2cf"
+       , position = TopW L 92
+       , lowerOnStart = True
+       , commands = [
+                    Run MultiCpu ["-t", "<fc=#a9a1e1><icon=/home/ian/.xmonad/icons/cpu.xbm/></fc> <total0>% <total1>% <total2>% <total3>% <total4>% <total5>% <total6>% <total7>%", "-L","3","-H","50","-l","#bbc2cf","-n","#bbc2cf","-h","#fb4934"] 50
+                    , Run Memory ["-t","<fc=#51afef><icon=/home/ian/.xmonad/icons/mem.xbm/></fc> <usedratio>%","-H","80","-L","10","-l","#bbc2cf","-n","#bbc2cf","-h","#fb4934"] 50
+                    , Run Date "%a %b %_d %l:%M" "date" 300
+                    , Run DynNetwork ["-t","<fc=#4db5bd><icon=/home/ian/.xmonad/icons/arrow_down.xbm/></fc> <rx>, <fc=#c678dd><icon=/home/ian/.xmonad/icons/arrow_up.xbm/></fc> <tx>","-H","200","-L","10","-h","#bbc2cf","-l","#bbc2cf","-n","#bbc2cf"] 50
+                    , Run CoreTemp ["-t", "<fc=#CDB464><icon=/home/ian/.xmonad/icons/temp.xbm/></fc> <core0>°", "-L", "30", "-H", "75", "-l", "lightblue", "-n", "#bbc2cf", "-h", "#aa4450"] 50
+                    , Run Com "/home/ian/.local/bin/network-check.sh" [] "wifi" 50
+                    , Run Com "/home/ian/.local/bin/tmst-i3block" [] "tmst" 50
+                    -- battery monitor
+                    , Run BatteryP       [ "BAT1" ]
+                                         [ "--template" , "<fc=#B1DE76><icon=/home/ian/.xmonad/icons/battery.xbm/></fc> <acstatus>"
+                                         , "--Low"      , "10"        -- units: %
+                                         , "--High"     , "80"        -- units: %
+                                         , "--low"      , "#fb4934" -- #ff5555
+                                         , "--normal"   , "#bbc2cf"
+                                         , "--high"     , "#98be65"
+
+                                         , "--" -- battery specific options
+                                                   -- discharging status
+                                                   , "-o"   , "<left>% (<timeleft>)"
+                                                   -- AC "on" status
+                                                   , "-O"   , "<left>% (<fc=#98be65>Charging</fc>)" -- 50fa7b
+                                                   -- charged status
+                                                   , "-i"   , "<fc=#98be65>Charged</fc>"
+                                         ] 50
+                    , Run StdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%StdinReader% }{  %tmst% | %multicpu% | %coretemp% | %memory% | %battery% | %dynnetwork% (%wifi%) | <fc=#ECBE7B>%date%</fc>"   -- #69DFFA
+       }
