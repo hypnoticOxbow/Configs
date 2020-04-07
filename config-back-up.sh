@@ -2,6 +2,7 @@ set -euxo pipefail
 cp ~/.xmonad/xmonad.hs ./
 cp ~/.xmobarrc ./
 cp ~/.config/nvim/init.vim ./.vimrc
+cp ~/.config/dunst/dunstrc ./
 cp ~/.bashrc ./
 cp ~/.zshrc ./
 cp -r ~/.doom.d/ ./
