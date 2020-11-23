@@ -73,13 +73,13 @@ Plug 'https://github.com/copy/deoplete-ocaml', {'for' : 'ocaml'}
 Plug 'deathlyfrantic/deoplete-spell', {'for' : [ 'tex', 'markdown' ]}
 Plug 'https://github.com/w0rp/ale.git', {'for' : 'ocaml'}
 Plug 'roxma/nvim-yarp'
-Plug 'vim-syntastic/syntastic', {'for' : 'ocaml'}
+"Plug 'vim-syntastic/syntastic', {'for' : 'ocaml'}
 
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ 'for' : [ 'c',  'python', 'javascript', 'cpp']
-    \ }
+"Plug 'autozimu/LanguageClient-neovim', {
+    "\ 'branch': 'next',
+    "\ 'do': 'bash install.sh',
+    "\ 'for' : [ 'c',  'python', 'javascript', 'cpp']
+    "\ }
 "Plug 'reasonml-editor/vim-reason-plus', { 'for' : 'ocaml'}
 Plug 'deoplete-plugins/deoplete-jedi'
 
@@ -256,29 +256,29 @@ let g:airline_theme='jellybeans'
 noremap <S-tab> :TagbarToggle<cr>
 
 " Language Client
-let g:LanguageClient_serverCommands = {
-            \'python': ['/usr/bin/pyls'],
-            \'ocaml': ['/home/ian/.nvm/versions/node/v10.10.0/bin/ocaml-language-server', '--stdio'],
-            \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
-            \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
-            \ 'cuda': ['ccls', '--log-file=/tmp/cc.log'],
-            \ 'objc': ['ccls', '--log-file=/tmp/cc.log'],
-            \ 'javascript': ['/home/ian/.nvm/versions/node/v10.10.0/bin/node', '/home/ian/build/javascript-typescript-langserver/lib/language-server-stdio'],
-            \ 'rust': ['rls']
-            \ }
-
-let g:LanguageClient_loadSettings = 1 " Use an absolute configuration path if you want system-wide settings
-let g:LanguageClient_settingsPath = '/home/ian/.config/nvim/settings.json'
-" https://github.com/autozimu/LanguageClient-neovim/issues/379 LSP snippet is not supported
-let g:LanguageClient_hasSnippetSupport = 0
-"autocmd FileType ocaml au VimEnter * LanguageClientStart
+"let g:LanguageClient_serverCommands = {
+            "\'python': ['/usr/bin/pyls'],
+            "\'ocaml': ['/home/ian/.nvm/versions/node/v10.10.0/bin/ocaml-language-server', '--stdio'],
+            "\ 'c': ['ccls', '--log-file=/tmp/cc.log'],
+            "\ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
+            "\ 'cuda': ['ccls', '--log-file=/tmp/cc.log'],
+            "\ 'objc': ['ccls', '--log-file=/tmp/cc.log'],
+            "\ 'javascript': ['/home/ian/.nvm/versions/node/v10.10.0/bin/node', '/home/ian/build/javascript-typescript-langserver/lib/language-server-stdio'],
+            "\ 'rust': ['rls']
+            "\ }
 "
-"
-let g:LanguageClient_rootMarkers = ['.root', 'project.*', '.ccls-root']
-nn <silent> <M-j> :call LanguageClient#textDocument_definition()<cr>
-nn <silent> <M-h> :call LanguageClient#textDocument_documentHighlight()<cr>
-nn <silent> <M-,> :call LanguageClient#textDocument_references({'includeDeclaration': v:false})<cr>
-nn <silent> K :call LanguageClient#textDocument_hover()<cr>
+"let g:LanguageClient_loadSettings = 1 " Use an absolute configuration path if you want system-wide settings
+"let g:LanguageClient_settingsPath = '/home/ian/.config/nvim/settings.json'
+"" https://github.com/autozimu/LanguageClient-neovim/issues/379 LSP snippet is not supported
+"let g:LanguageClient_hasSnippetSupport = 0
+""autocmd FileType ocaml au VimEnter * LanguageClientStart
+""
+""
+"let g:LanguageClient_rootMarkers = ['.root', 'project.*', '.ccls-root']
+"nn <silent> <M-j> :call LanguageClient#textDocument_definition()<cr>
+"nn <silent> <M-h> :call LanguageClient#textDocument_documentHighlight()<cr>
+"nn <silent> <M-,> :call LanguageClient#textDocument_references({'includeDeclaration': v:false})<cr>
+"nn <silent> K :call LanguageClient#textDocument_hover()<cr>
 "augroup LanguageClient_config
   "au!
   "au BufEnter * let b:Plugin_LanguageClient_started = 0
@@ -318,10 +318,10 @@ nn <silent> K :call LanguageClient#textDocument_hover()<cr>
 "
 "nn xx x
 
-fu! C_init()
-  setl formatexpr=LanguageClient#textDocument_rangeFormatting()
-endf
-au FileType c,cpp,cuda,objc :call C_init()
+"fu! C_init()
+  "setl formatexpr=LanguageClient#textDocument_rangeFormatting()
+"endf
+"au FileType c,cpp,cuda,objc :call C_init()
 
 
 " Vim exchange stuff
@@ -359,8 +359,8 @@ let g:rainbow_conf = {
 let g:rainbow_active=1
 
 " Merlin stuff
-let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
-execute "set rtp+=" . g:opamshare . "/merlin/vim"
+"let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
+"execute "set rtp+=" . g:opamshare . "/merlin/vim"
 let g:merlin_split_method = "never"
 let g:merlin_completion_arg_type = "always"
 let g:merlin_textobject_grow   = 'm'
@@ -376,7 +376,7 @@ autocmd FileType ocaml nmap <silent><Leader>p :MerlinShrinkEnclosing<CR>
 "nnoremap <silent><esc> :noh<CR><Esc>
 autocmd FileType ocaml nnoremap <silent><esc> :noh<CR>:MerlinClearEnclosing<CR><Esc>
 "Syntastic
-let g:syntastic_ocaml_checkers = ['merlin']
+"let g:syntastic_ocaml_checkers = ['merlin']
 "set statusline+=%#warningmsg#
 "set statusline+=%{SyntasticStatuslineFlag()}
 "set statusline+=%*
@@ -575,8 +575,8 @@ vnoremap <silent> # :<C-U>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
 " ## added by OPAM user-setup for vim / base ## 93ee63e278bdfc07d1139a748ed3fff2 ## you can edit, but keep this line
-let s:opam_share_dir = system("opam config var share")
-let s:opam_share_dir = substitute(s:opam_share_dir, '[\r\n]*$', '', '')
+"let s:opam_share_dir = system("opam config var share")
+"let s:opam_share_dir = substitute(s:opam_share_dir, '[\r\n]*$', '', '')
 
 "let s:opam_configuration = {}
 "

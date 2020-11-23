@@ -1,9 +1,16 @@
 export TERM="xterm-256color"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 
+NPM_PACKAGES="${HOME}/.npm-packages"
+
+export PATH="$PATH:$NPM_PACKAGES/bin"
+
+# Preserve MANPATH if you already defined it somewhere in your config.
+# Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
+export MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-
 # Path to your oh-my-zsh installation.
 export ZSH=/home/ian/.oh-my-zsh
 
@@ -28,7 +35,7 @@ export PATH=$PATH:$GEM_HOME/bin
 export PASSWORD_STORE_CLIP_TIME=1000
 
 #Neo-fuzz stuff
-export HOST_NEO_FUZZ_HOME=$HOME/workspace/Sift/nf-git/
+export HOST_NEO_FUZZ_HOME=$HOME/Projects/neo-fuzz/
 export NEO_FUZZ_HOME=/neo-fuzz
 export NEO_FUZZ_SLIME_PORT=6452
 
@@ -121,6 +128,22 @@ POWERLEVEL9K_MULTILINE_SECOND_PROMPT_PREFIX=" ❯ "
 # Uncomment the following line to disable bi-weekly auto-update checks.
 # DISABLE_AUTO_UPDATE="true"
 
+
+
+
+
+
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion. Case
+# sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment the following line to disable bi-weekly auto-update checks.
+# DISABLE_AUTO_UPDATE="true"
+
 # Uncomment the following line to change how often to auto-update (in days).
 # export UPDATE_ZSH_DAYS=13
 
@@ -195,6 +218,8 @@ must() {
 	until ($@); do true; done
 };
 
+function viman() { man "$@" | nvim -R +":set ft=man" - ; }
+
 function until_ok() {until ($0); do sleep .2; done };
 
 function ecw() {emacs $* &}
@@ -205,7 +230,6 @@ function gt() {GIT_AUTHOR_DATE=$1 GIT_COMMITTER_DATE=$1 git commit}
 
 function yt() {youtube-dl -o - $* | castnow --quiet -}
 
-function nc() {pandoc $1 -o `echo $1 | cut -d '.' -f1`.pdf --from markdown --template eisvogel --listings}
 
 function paste() {
   local file=${1:-/dev/stdin}
@@ -225,8 +249,9 @@ function spotifydl() {docker run --rm -it -v $(pwd):/music ritiek/spotify-downlo
 
 # ssh
 export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
-export PATH=$HOME/.local/bin:$HOME/bin:/home/ian/.opam/4.06.0/bin/:/home/ian/workspace/router/openwrt/staging_dir/toolchain-mips_24kc_gcc-8.3.0_musl/bin:$PATH:$HOME/.cargo/bin/:$HOME/workspace/Sift/neo-fuzz/trunk/code/tools/
+export PATH=$HOME/.local/bin:$HOME/bin:/home/ian/.opam/4.06.0/bin/:/home/ian/workspace/router/openwrt/staging_dir/toolchain-mips_24kc_gcc-8.3.0_musl/bin:$PATH:$HOME/.cargo/bin/:$HOME/Projects/neo-fuzz/code/tools/
 export PATH=$PATH:$HOME/.emacs.d/bin/
+export PATH=/home/ian/build/emacs-bin/:$PATH
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -240,11 +265,10 @@ alias clip='xargs echo -n | xclip -selection clipboard -i'
 alias spotify="spotify --force-device-scale-factor=2"
 alias man="viman"
 alias pacman="pacman --color auto"
-alias ws="cd ~/Documents/Workspace"
-alias sch="cd ~/Documents/School/2019-Fall/"
-alias nf="cd ~/workspace/Sift/nf-git/code/"
-alias sft="cd ~/workspace/Sift"
-alias hom="cd ~/workspace/Sift/homer"
+alias evw="cd ~/Projects/PL-Research/"
+alias sch="cd ~/Documents/School/2020-Fall/"
+alias nf="cd ~/Projects/neo-fuzz/code/"
+alias hom="cd ~/Projects/homer"
 alias svnls="svn st | cut -c 9-"
 alias lc='lsd'
 alias lct='colorls -A --sd --tree'
@@ -261,7 +285,6 @@ alias lt='ls --tree'
 alias cg="export CHECKGIT=1"
 alias ncg="unset CHECKGIT"
 alias n="vim ~/.list.todo"
-alias ecwt='emacsclient --c -nw $*'
 alias wgetall='wget -r -nH --cut-dirs=2 --no-parent --reject="index.html*" '
 
 alias aerc='TERM=xterm aerc'
@@ -270,7 +293,7 @@ alias tmux='TERM=xterm-256color tmux'
 alias mutt='cd ~/.attachments && neomutt'
 alias neomutt='cd ~/.attachments && neomutt'
 
-alias loadnvm=". $HOME/.nvm/nvm.sh"
+alias loadnvm=". /usr/share/nvm/init-nvm.sh"
 
 
 #ssh tmux
@@ -280,7 +303,7 @@ rhimes() { eval $(ssh-agent) && mosh ikariniemi@rhimes0 -- tmux attach -t 0 }
 
 achilles() { eval $(ssh-agent) && mosh ikariniemi@achilles -- tmux attach -t 0 }
 
-argo() { eval $(ssh-agent) && mosh ian@argo.acm.umn.edu -- tmux attach -t 0 }
+argo() { eval $(ssh-agent) && mosh ian@160.94.179.157 -- tmux attach -t 0 }
 
 ## OPAM configuration
 #. /home/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
@@ -294,10 +317,10 @@ export WORKON_HOME=~/.virtualenvs
 export CIRCA_BASEPORT=6440
 export CIRCA_BASENAME=ian
 #Homer Arcade config
-export HOMER_HOME=$HOME/workspace/Sift/homer-new/code
-export ARCADE_HOME=$HOME/workspace/Sift/homer-new/code/components/arcade
-export LISP_EXEC=alisp
-export LISP_LOAD="-L"
+export HOMER_HOME=/home/ian/Projects/homer
+export ARCADE_HOME=/home/ian/Projects/homer/components/arcade
+export LISP_EXEC=sbcl
+export LISP_LOAD="--load"
 
 source /usr/bin/virtualenvwrapper_lazy.sh
 
@@ -309,8 +332,7 @@ source /usr/bin/virtualenvwrapper_lazy.sh
 #Opam init
 test -r /home/ian/.opam/opam-init/init.zsh && . /home/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 
-source /home/ian/build/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-cat ~/.list.todo | grep '\[ \]'
+#source /home/ian/build/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 #PATH="/home/ian/perl5/bin${PATH:+:${PATH}}"; export PATH;
 #PERL5LIB="/home/ian/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;

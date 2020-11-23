@@ -10,7 +10,7 @@ cp ~/.zshrc ./
 cp -r ~/.doom.d/ ./
 cp ~/.Xresources ./
 cp ~/.gitconfig ./
-cp ~/.compton.conf ./
+cp ~/.config/picom/picom.conf ./
 cp ~/.config/kitty/kitty.conf ./
 git add .
 git commit -m "Config Backup $(date +%F-%H-%M)"

@@ -21,10 +21,10 @@
     import XMonad.Actions.WithAll (sinkAll)
     import XMonad.Config.Desktop (desktopLayoutModifiers)
     --import XMonad.Config.Xfce
-    import XMonad.Hooks.EwmhDesktops (ewmh) -- for touchegg
+    import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen) -- for touchegg
     import XMonad.Hooks.FadeInactive (fadeInactiveLogHook)
     import XMonad.Hooks.ManageDocks
-    import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat, doRectFloat)
+    import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat, doRectFloat, isDialog)
     import XMonad.Hooks.SetWMName (setWMName)
     import XMonad.Layout.NoBorders (smartBorders)
   --added for spacing
@@ -39,6 +39,8 @@
     import XMonad.Util.EZConfig(additionalKeys, additionalMouseBindings)
 
     import XMonad.Hooks.DynamicLog
+    import XMonad.Hooks.DynamicBars as Bars
+    import XMonad.Layout.IndependentScreens
 
 
     import XMonad.Util.Scratchpad
@@ -66,6 +68,13 @@
         \&& xmodmap -e 'keycode 135 = Super_L' \
         \&& xset m 0 0"
 
+
+    barCreator :: Bars.DynamicStatusBar
+
+    barCreator (XMonad.S sid) = spawnPipe $ "xmobar --screen " ++ show sid
+
+    barDestroyer :: Bars.DynamicStatusBarCleanup
+    barDestroyer = return ()
 --------------------------------------------------------------------------------
 -- Multi-Screen                                                               --
 --------------------------------------------------------------------------------
@@ -123,7 +132,8 @@
         , ((modm,               xK_Up),    prevWS)
         , ((modm .|. shiftMask, xK_Down),  shiftToNext)
         , ((modm .|. shiftMask, xK_Up),    shiftToPrev)
-        , ((modm,               xK_f     ), spawn "rofi -show run -theme glue_pro_blue")
+        , ((modm,               xK_f     ), spawn "rofi -show run")
+        , ((modm .|. shiftMask, xK_f     ), spawn "eidolon menu")
 
     -- close focused window
         , ((modm, xK_x     ), kill)
@@ -153,7 +163,7 @@
         , ((modm .|. controlMask, xK_k     ), sendMessage $ Expand) -- Shrink the master area
     -- Push window back into tiling
         , ((modm,               xK_t     ), withFocused $ windows . W.sink)
-    -- Increment the number of windows in the master area
+
         , ((modm              , xK_comma ), sendMessage (IncMasterN 1))
     -- Deincrement the number of windows in the master area
         , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
@@ -170,6 +180,10 @@
     --displaymgt
         , ((modm .|. shiftMask, xK_d     ), spawn "sh /home/ian/.local/bin/displaymgt")
         , ((modm .|. controlMask, xK_d     ), spawn "sh /home/ian/.local/bin/displaymgt --mirrored")
+    --Opening emacs editor
+        , ((modm .|. controlMask, xK_e     ), spawn "/home/ian/.local/bin/emacs.sh")
+    --youtube-dl and play in vlc script
+        , ((modm .|. controlMask, xK_d     ), spawn "~/.local/bin/downloader")
     --Screenshot
         , ((modm .|. controlMask, xK_s     ), spawn "sh ~/.local/bin/screenshot")
     --Timesheet time in
@@ -290,7 +304,9 @@
         , resource  =? "desktop_window" --> doIgnore
         , resource  =? "gnomedesktop"   --> doIgnore
         , className =? "jetbrains-idea" --> doFloat
+        , className =? "payday2_release" --> doFullFloat
         , isFullscreen                  --> doFullFloat
+        , isDialog                      --> doF W.swapUp
         , return True --> doF W.swapDown]
 
 --rotationState = unsafePerformIO (newIORef 0)
@@ -312,9 +328,34 @@
         , ppSep     = "   "
         }
 
+    -- defaults hs = def {
+    --         terminal = myTerminal,
+    --         modMask  = mod4Mask, -- Windows key
+    --         workspaces         = ["1","2","3","4", "q", "w", "e", "r", "5","6","7","8","9", "0", "-", "="],
+    --         normalBorderColor  = "#dddddd",
+    --         focusedBorderColor = "#0099CC",
+    --         focusFollowsMouse  = True,
+    --         clickJustFocuses   = False,
+    --         borderWidth        = 1,
+    --         keys               = myKeys,
+    --         logHook            = myLogHook xmproc
+    --         , layoutHook         = myLayout
+    --         , manageHook         = manageScratchPad <+> myManageHook <+> manageHook def,
+    --             startupHook = do
+    --                 spawn "compton --config ~/.compton.conf"
+    --                 spawn "~/.local/bin/butler"
+    --                 --setWMName "LG3D"
+    --         }
+
+
     main = do
            xmproc <- spawnPipe "/home/ian/.local/bin/xmobar"
-           xmonad $ docks $ ewmh $ def {
+           n <- countScreens
+           hs <-
+             mapM
+                (\i -> spawnPipe $ "xmobar -x " ++ show i ++ " /home/ian/.xmonad/.xmobarrc")
+                [0 .. n - 1]
+           xmonad $ docks $ ewmhFullscreen $ ewmh $ def {
             terminal = myTerminal,
             modMask  = mod4Mask, -- Windows key
             workspaces         = ["1","2","3","4", "q", "w", "e", "r", "5","6","7","8","9", "0", "-", "="],
@@ -328,7 +369,8 @@
             , layoutHook         = myLayout
             , manageHook         = manageScratchPad <+> myManageHook <+> manageHook def,
                 startupHook = do
-                    spawn "compton --config ~/.compton.conf"
+                    spawn "picom --config ~/.config/picom/picom.conf"
                     spawn "~/.local/bin/butler"
                     --setWMName "LG3D"
            }
+
