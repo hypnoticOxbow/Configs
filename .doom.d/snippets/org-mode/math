@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: math
+# uuid: math
+# key: math
+# condition: t
+# --
+\begin{math}
+$0
+\end{math}

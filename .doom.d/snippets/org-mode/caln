@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: caln
+# uuid: caln
+# key: caln
+# condition: t
+# --
+\$\mathcal{N}\$

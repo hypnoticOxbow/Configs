@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: normal
+# uuid: normal
+# key: normal
+# condition: t
+# --
+\$\mathcal{N}(\mu,\sigma^2)\$$0

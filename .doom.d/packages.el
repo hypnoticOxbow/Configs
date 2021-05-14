@@ -6,11 +6,23 @@
 ;; (package! another-package :recipe (:host github :repo "username/repo"))
 ;; (package! builtin-package :disable t)
 (package! badwolf-theme)
+;; (package! sly :pin "68561f1b7b66fa0240766ece836bb04da31ea17d")
+;; (package! sly-macrostep :pin "5113e4e926cd752b1d0bcc1508b3ebad5def5fad")
+;; (package! sly-repl-ansi-color :pin "b9cd52d1cf927bf7e08582d46ab0bcf1d4fb5048")
 (package! sly-asdf)
 (package! sly-quicklisp)
 (package! common-lisp-snippets)
 (package! ob-hy)
+(package! counsel-jq)
 
+(package! alert)
+(package! slack)
+
+(package! evil-escape :disable t)
+
+
+;; (package! md4rd)
+;; (package! org-pretty-table :recipe (:host github :repo "Fuco1/org-pretty-table"))
 
 ;; (when (package! magit :pin "2fb3bf782cc")
 ;;   (when (featurep! +forge)

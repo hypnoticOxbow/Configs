@@ -1,13 +1,15 @@
 ;;; .doom.d/config.el -*- lexical-binding: t; -*-
 
 ;; Place your private configuration here
-(setq! doom-theme 'badwolf)
+;;
+;;
+;; A more complex, more lazy-loaded config
+(setq! doom-theme 'doom-henna)
+;; (setq! doom-henna-brighter-modeline 't)
 ;; (setq! inferior-lisp-program "alisp")
 ;; (setq! sly-contribs )
 (setq! display-line-numbers-type 't)
-
-;; Turn off auth-sources, I already have pass to deal with this
-;; (setq auth-sources nil)
+(setq auto-save-default nil)
 
 
 (setq! doom-font (font-spec :family "PragmataPro Liga" :size 15))
@@ -18,8 +20,61 @@
 ;;
 ;;
 
+;; Flyspell config (if we adopt it)
+;; (map! :i "C-i" #'flyspell-auto-correct-word)
 
-(setq! history-length 1000)
+(defun number-region (start end)
+  (interactive "r")
+  (let* ((count 1)
+     (indent-region-function (lambda (start end)
+                   (save-excursion
+                     (setq end (copy-marker end))
+                     (goto-char start)
+                     (while (< (point) end)
+                       (or (and (bolp) (eolp))
+                       (insert (format "%d. " count))
+                       (setq count (1+ count)))
+                       (forward-line 1))
+                     (move-marker end nil)))))
+    (indent-region start end)))
+
+(setq lsp-pyls-plugins-pycodestyle-enabled nil)
+
+
+
+(after! haskell-mode
+  (set-popup-rule! "^\\*haskell\\*" :ignore t :quit nil :ttl nil)
+  (setq lsp-haskell-hlint-on nil)
+  (map! :map interactive-haskell-mode-map
+         "C-p" #'haskell-interactive-mode-history-previous
+         "C-n" #'haskell-interactive-mode-history-next
+         "C-d" #'haskell-interactive-mode-kill-whole-line
+        )
+  (map! :localleader
+        :map haskell-mode-map
+        (:prefix ("e" . "evaluation")
+         :desc "Load buffer" "b" #'haskell-process-load-or-reload
+         )
+        (:prefix ("r" . "repl")
+         :desc "Restart process" "r" #'haskell-process-restart
+         :desc "Repl clear" "c" #'haskell-process-clear
+         :desc "Cd to dir" "d" #'haskell-process-cd
+         )
+        )
+  )
+
+
+
+(after! emojify
+  ;; TODO: Find a way to make removing hooks work
+  ;; (remove-hook! 'doom-first-buffer #'global-emojify-mode)
+  ;; (remove-hook!  'global-emojify-mode #'doom-first-buffer)
+  (add-hook! 'emacs-lisp-mode-hook #'emojify-mode)
+  (add-hook! 'slack-mode-hook #'emojify-mode)
+  (add-hook! 'forge-topic-mode-hook #'emojify-mode)
+  )
+
+(setq! history-length 2000)
 (put 'minibuffer-history 'history-length 50)
 (put 'evil-ex-history 'history-length 50)
 (put 'kill-ring 'history-length 25)
@@ -32,9 +87,39 @@
 
 
 ;; Load Silver
-;;(require 'silver-mode)
-;;(add-hook! 'silver-mode-hook #'rainbow-delimiters-mode)
+(add-to-list 'load-path "~/.doom.d/silver-mode/")
+(require 'silver-mode)
+(add-hook! 'silver-mode-hook #'rainbow-delimiters-mode)
 
+
+;; Compile mode changes
+  ;; (evil-set-initial-state 'compilation-mode 'normal)
+
+(map!
+ :map special-mode-map
+ :n "h" nil
+ "h" nil
+ )
+
+
+;; (dolist (keymap evil-collection-compile-maps)
+
+;;   (evil-collection-define-key nil keymap
+;;     "g" nil)
+
+;;   (evil-collection-define-key 'normal keymap
+;;     (kbd "RET") 'compile-goto-error
+
+;;     "go" 'compilation-display-error
+;;     (kbd "S-<return>") 'compilation-display-error
+
+;;     "gj" 'compilation-next-error
+;;     "gk" 'compilation-previous-error
+;;     (kbd "C-j") 'compilation-next-error
+;;     (kbd "C-k") 'compilation-previous-error
+;;     "[[" 'compilation-previous-file
+;;     "]]" 'compilation-next-file
+;;     "gr" 'recompile))
 
 (setq! ein:worksheet-enable-undo 't)
 (after! pipenv
@@ -50,61 +135,6 @@
     '(("^\\*python\\*" :regexp t :align 'right :width 0.5 :quit nil :ttl nil)
       )
     ))
-
-(defadvice! no-errors/+org-inline-image-data-fn (_protocol link _description)
-  :override #'+org-inline-image-data-fn
-  "Interpret LINK as base64-encoded image data. Ignore all errors."
-  (ignore-errors
-    (base64-decode-string link)))
-
-(setq org-superstar-headline-bullets-list '("■" "◆" "▲" "‣" "◘" "✿" "◉" "○" "✸" ))
-(setq org-superstar-bullet-list '("■" "◆" "▲" "‣" "◘" "✿" "◉" "○" "✸" ))
-(setq org-superstar-cycle-headline-bullets 'nil)
-
-(defun my/org-mode-hook ()
-  "Stop the org-level headers from increasing in height relative to the other text."
-  (dolist (face '(org-level-1
-                  org-level-2
-                  org-level-3
-                  org-level-4
-                  org-level-5
-                  outline-1
-                  outline-2
-                  outline-3
-                  outline-4
-                  outline-5))
-    (set-face-attribute face nil :height 1.0)))
-
-(add-hook 'org-mode-hook #'my/org-mode-hook)
-
-(defun what-face (pos)
-  (interactive "d")
-  (let ((face (or (get-char-property pos 'read-face-name)
-                  (get-char-property pos 'face))))
-    (if face (message "Face: %s" face) (message "No face at %d" pos))))
-
-
-(defun my-org-screenshot ()
-  "Take a screenshot into a time stamped unique-named file in the
-same directory as the org-buffer and insert a link to this file."
-  (interactive)
-  (org-display-inline-images)
-  (setq filename
-        (concat
-         (make-temp-name
-          (concat (file-name-nondirectory (buffer-file-name))
-                  "_imgs/"
-                  (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
-  (unless (file-exists-p (file-name-directory filename))
-    (make-directory (file-name-directory filename)))
-                                        ; take screenshot
-  (if (eq system-type 'darwin)
-      (call-process "screencapture" nil nil nil "-i" filename))
-  (if (eq system-type 'gnu/linux)
-      (print (call-process "import" nil nil t filename) ))
-                                        ; insert into file if correctly taken
-  (if (file-exists-p filename)
-      (insert (concat "[[file:" filename "]]"))))
 
 (after! ein-notebook
   (set-popup-rules!
@@ -179,21 +209,112 @@ same directory as the org-buffer and insert a link to this file."
    :i "<C-return>" 'ein:worksheet-execute-cell-and-goto-next-km
    :i "<S-return>" 'ein:worksheet-execute-cell
    :n "gj"         'ein:worksheet-goto-next-input
-   :n "gk"         'ein:worksheet-goto-prev-input
-   )
+   :n "gk"         'ein:worksheet-goto-prev-input))
 
-  ;; ;; keybindings mirror ipython web interface behavior
-  ;; (evil-define-key 'insert ein:notebook-mode-map
-  ;;   (kbd "<C-return>") 'ein:worksheet-execute-cell-and-goto-next
-  ;;   (kbd "<S-return>") 'ein:worksheet-execute-cell)
 
-  ;; (evil-define-key 'normal ein:notebook-mode-map
-  ;;   ;; keybindings mirror ipython web interface behavior
-  ;;   (kbd "<C-return>") 'ein:worksheet-execute-cell-and-goto-next
-  ;;   (kbd "<S-return>") 'ein:worksheet-execute-cell
-  ;;   "gj" 'ein:worksheet-goto-next-input
-  ;;   "gk" 'ein:worksheet-goto-prev-input)
-  )
+
+;; (defun my-org-screenshot ()
+;;   "Take a screenshot into a time stamped unique-named file in the
+;; same directory as the org-buffer and insert a link to this file."
+;;   (interactive)
+;;   (org-display-inline-images)
+;;   (setq filename
+;;         (concat
+;;          (make-temp-name
+;;           (concat (file-name-nondirectory (buffer-file-name))
+;;                   "_imgs/"
+;;                   (format-time-string "%Y%m%d_%H%M%S_")) ) ".png"))
+;;   (unless (file-exists-p (file-name-directory filename))
+;;     (make-directory (file-name-directory filename)))
+;;                                         ; take screenshot
+;;   (if (eq system-type 'darwin)
+;;       (call-process "screencapture" nil nil nil "-i" filename))
+;;   (if (eq system-type 'gnu/linux)
+;;       (print (call-process "import" nil nil t filename) ))
+;;                                         ; insert into file if correctly taken
+;;   (if (file-exists-p filename)
+;;       (insert (concat "[[file:" filename "]]"))))
+
+
+
+;; (defun org-mode-reftex-setup ()
+;;   (load-library "reftex")
+;;   (and (buffer-file-name) (file-exists-p (buffer-file-name))
+;;        (progn
+;;      ;enable auto-revert-mode to update reftex when bibtex file changes on disk
+;;      (global-auto-revert-mode t)
+;;      (reftex-parse-all)
+;;      ;add a custom reftex cite format to insert links
+;;      (reftex-set-cite-format "** [[papers:%l][%l]]: %t \n"
+;;    )))
+;;   ;; (define-key org-mode-map (kbd "C-c )") 'reftex-citation)
+;; )
+
+;; (add-hook 'org-mode-hook 'org-mode-reftex-setup)
+
+
+
+;; (require 'color-theme)
+;; (color-theme-initialize)
+
+(defadvice! no-errors/+org-inline-image-data-fn (_protocol link _description)
+  :override #'+org-inline-image-data-fn
+  "Interpret LINK as base64-encoded image data. Ignore all errors."
+  (ignore-errors
+    (base64-decode-string link)))
+
+(after! ox-hugo
+  (add-to-list 'org-hugo-external-file-extensions-allowed-for-copying '"bmp" 'append))
+
+(setq org-superstar-headline-bullets-list '("■" "◆" "▲" "‣" "◘" "◉" "○" "■" "◆" "▲" "‣" "◘" "◉" ))
+(setq org-superstar-bullet-list '("■" "◆" "▲" "‣" "◘" "◉" "○" "■" "◆" "▲" "‣" "◘" "◉" ))
+(setq org-superstar-cycle-headline-bullets 'nil)
+
+(defun my/org-mode-hook ()
+  "Stop the org-level headers from increasing in height relative to the other text."
+  (dolist (face '(org-level-1
+                  org-level-2
+                  org-level-3
+                  org-level-4
+                  org-level-5
+                  outline-1
+                  outline-2
+                  outline-3
+                  outline-4
+                  outline-5))
+    (set-face-attribute face nil :height 1.0)))
+
+(add-hook 'org-mode-hook #'my/org-mode-hook)
+
+(with-eval-after-load 'org
+  (plist-put org-format-latex-options :background 'default))
+
+(defun diary-limited-cyclic (recurrences interval m d y)
+  "For use in emacs diary. Cyclic item with limited number of recurrences.
+Occurs every INTERVAL days, starting on YYYY-MM-DD, for a total of
+RECURRENCES occasions."
+  (let ((startdate (calendar-absolute-from-gregorian (list m d y)))
+        (today (calendar-absolute-from-gregorian date)))
+    (and (not (minusp (- today startdate)))
+         (zerop (% (- today startdate) interval))
+         (< (floor (- today startdate) interval) recurrences))))
+
+(defun what-face (pos)
+  (interactive "d")
+  (let ((face (or (get-char-property pos 'read-face-name)
+                  (get-char-property pos 'face))))
+    (if face (message "Face: %s" face) (message "No face at %d" pos))))
+
+
+
+;; (map!
+;;  :after org
+;;  :localleader
+;;  :map org-mode-map
+;;  (:prefix ("c" . "compile")
+;;   :desc "Quicklisp load system" "q" #'sly-quickload
+;;   :desc "ASDF compile and load system" "s" #'sly-asdf-load-system))
+
 
 ;; (after! spell-fu
 ;;   (setq! ispell-personal-dictionary "/home/ian/.doom.d/personal-dict"))
@@ -203,12 +324,22 @@ same directory as the org-buffer and insert a link to this file."
 ;;   (setq spell-fu-idle-delay 0.7))
 
 (after! org
+  (setq org-hide-emphasis-markers t)
   (map! :map evil-org-mode-map
         :n "zs"  #'org-latex-preview)
   (evil-define-key 'normal org-mode-map (kbd "z s") #'org-latex-preview)
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 0.8))
+  (add-to-list 'org-latex-packages-alist
+               '("" "tikz" t))
+  (eval-after-load "preview"
+    '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t))
+  (setq org-preview-latex-default-process 'imagemagick)
   (add-to-list 'org-latex-packages-alist '("" "bbold" t))
   (setq org-link-file-path-type 'adaptive))
+
+(after! ox-pandoc
+  (setq org-pandoc-options-for-latex-pdf '((pdf-engine . "xelatex")))
+  )
 
 (after! tramp
   (add-to-list 'tramp-remote-path "/home/ikariniemi/.local/bin")
@@ -230,29 +361,11 @@ same directory as the org-buffer and insert a link to this file."
   (tramp-cleanup-all-buffers)
   (tramp-cleanup-all-connections))
 
-
-
-(after! sly-stickers
-  (map! :map sly-stickers--replay-mode-map
-        "j" nil
-        :n "j" nil
-        :n "k" nil))
-
 (map! :after coq-mode
       :map coq-mode-map
       :localleader
       (:prefix ("p" . "proof")
        "c" #'proof-assert-until-point-interative))
-
-
-
-
-
-(use-package! sly-asdf
-  :defer t
-  :init
-  (add-to-list 'sly-contribs 'sly-asdf 'append))
-
 
 
 (after! evil-tex
@@ -261,6 +374,7 @@ same directory as the org-buffer and insert a link to this file."
         :localleader
         :desc "Compile Document"    "a" #'TeX-command-run-all
         :desc "Insert Macro"    "m" #'TeX-insert-macro
+        :desc "Insert item"    "i" #'LaTeX-insert-item
         :desc "Kill Tex Job"    "k" #'TeX-kill-job
         :desc "View output"    "v" #'TeX-view
         :desc "Insert Environment"    "e" #'LaTeX-environment
@@ -271,48 +385,16 @@ same directory as the org-buffer and insert a link to this file."
         :desc "Fill and indent current region"    "fr"  'LaTeX-fill-region
         :desc "Fill and indent current section"         "fs"  'LaTeX-fill-section))
 
+(after! sly-stickers
+  (map! :map sly-stickers--replay-mode-map
+        "j" nil
+        :n "j" nil
+        :n "k" nil))
 
-;; (use-package sly
-;;   :ensure t
-;;   :after magit-todos
-;;   :bind
-;;   (:map sly-mrepl-mode-map
-;;    ("<C-up>" . sly-mrepl-previous-input-or-button)
-;;    ("<C-down>" . sly-mrepl-next-input-or-button))
-;;   :init
-;;   (progn
-;;     (setq sly-contribs '(sly-fancy sly-mrepl sly-company)))
-;;   :config
-;;   (progn
-;;     (setq sly-lisp-implementations
-;;           `((sbcl ("/usr/local/bin/sbcl")
-;;                   :env ("SBCL_HOME=/usr/local/lib/sbcl")))
-;;           sly-autodoc-use-multiline t
-;;           sly-kill-without-query-p t
-;;           sly-repl-history-remove-duplicates t
-;;           sly-repl-history-trim-whitespaces t
-;;           sly-net-coding-system 'utf-8-unix
-;;           )
-;;     (sly-setup '(sly-fancy sly-mrepl))
-;;     (add-hook 'sly-mode-hook (lambda () (magit-todos-mode t)))))
-
-
-;; (use-package sly-mrepl
-;;   :ensure nil
-;;   :after sly
-;;   :config
-;;   (progn
-;;     (set-face-attribute 'sly-mrepl-output-face nil
-;;                         :foreground "LightSalmon"
-;;                         :background "black"
-;;                         :weight 'normal)))
-
-
-
-;; (map! :map sly-stickers--replay-mode-map
-;;       :after sly-stickers--replay-mode
-;;       :n "j" nil
-;;       :n "k" nil)
+(use-package! sly-asdf
+  :defer t
+  :init
+  (add-to-list 'sly-contribs 'sly-asdf 'append))
 
 
 
@@ -322,29 +404,30 @@ same directory as the org-buffer and insert a link to this file."
                       :weight 'normal))
 
 (after! sly
-  ;; (require 'sly-tramp)
   (add-to-list 'sly-contribs 'sly-tramp 'append)
   (setq sly-mrepl-eli-like-history-navigation t)
-
-
   (remove-hook! 'sly-mode-hook #'+common-lisp-init-sly-h)
   (remove-hook! 'sly-mode #'+common-lisp-init-sly-h)
-  (setq spell-fu-idle-delay 0.7)
-
   (setq lispy-colon-p nil
         sly-autodoc-use-multiline t
         sly-kill-without-query-p t
         sly-repl-history-remove-duplicates t
         sly-repl-history-trim-whitespaces t
         sly-net-coding-system 'utf-8-unix)
-  (setq sly-lisp-implementations
-        '(
-          (sbcl ("sbcl" "--core"
-                 "/home/ian/sbcl.core-for-sly")
-                :coding-system utf-8-unix)
-          ;; (sbcl ("sbcl") :coding-system utf-8-unix)
-          (ccl ("ccl") :coding-system utf-8-unix)
-          ))
+  (let ((dumper "/home/ian/build/lisp-repl-core-dumper/lisp-repl-core-dumper"))
+    (setq sly-lisp-implementations
+          `(
+            ;; (sbcl (,dumper "sbcl" "alexandria"))
+            (sbcl ("sbcl") :coding-system utf-8-unix)
+            (ccl (,dumper "ccl")))))
+  ;; (setq sly-lisp-implementations
+  ;;       '(
+  ;;         (sbcl ("sbcl" "--core"
+  ;;                "/home/ian/sbcl.core-for-sly")
+  ;;               :coding-system utf-8-unix)
+  ;;         ;; (sbcl ("sbcl") :coding-system utf-8-unix)
+  ;;         (ccl ("ccl") :coding-system utf-8-unix)
+  ;;         ))
   (add-hook! 'lispy-mode-hook (semantic-mode -1))
   (setq common-lisp-hyperspec-root "file:///home/ian/.local/lib/HyperSpec/")
   (setq sly-auto-start 'never)
@@ -370,21 +453,27 @@ same directory as the org-buffer and insert a link to this file."
       ;; buffers are meant to be displayed with sufficient vertical space.
       ("^\\*sly-\\(?:db\\|inspector\\)" :ignore t))))
 
-;; (map! :after sly-stickers--replay-mode
-;;       :map sly-stickers--replay-mode-map
-;;       ("j" #'next-line)
-;;       ("k" #'previous-line))
+(map!
+ :after sly
+ :localleader
+ :map lisp-mode-map
+ :desc "Sly connect"          "." #'sly-connect
+ (:prefix ("c" . "compile")
+  :desc "Quicklisp load system" "q" #'sly-quickload
+  :desc "ASDF compile and load system" "s" #'sly-asdf-load-system
+  :desc "ASDF compile and test system" "t" #'sly-asdf-test-system))
 
+(after! lispyville
+  (setq lispyville-key-theme
+        '((operators normal)
+          c-w
+          (prettify insert visual)
+          (atom-movement normal visual)
+          slurp/barf-lispy
+          additional
+          additional-insert))
+  (lispyville-set-key-theme))
 
-;; (after! sly-stickers
-;;   (define-key sly-stickers--replay-mode-map (kbd "j") #'next-line)
-;;   (define-key sly-stickers--replay-mode-map (kbd "k") #'previous-line)
-;;   (define-key sly-stickers--replay-mode-map (kbd "h") #'left-char)
-;;   (define-key sly-stickers--replay-mode-map (kbd "l") #'right-char))
-
-
-
-;; (after! org)
 
 
 
@@ -399,39 +488,12 @@ same directory as the org-buffer and insert a link to this file."
                            markdown-html-tag-name-face))
 
 
-(after! lispyville
-  (setq lispyville-key-theme
-        '((operators normal)
-          c-w
-          (prettify insert visual)
-          (atom-movement normal visual)
-          slurp/barf-lispy
-          additional
-          additional-insert))
-  (lispyville-set-key-theme))
-
-
 (after! racket
+  (setq racket-xp-after-change-refresh-delay 5)
   (set-popup-rules!
-    '(("^\\*Racket-REPL\\*" :ignore t :quit nil :ttl nil))))
-
-
-(map!
- :after sly
- :localleader
- :map lisp-mode-map
- :desc "Sly connect"          "." #'sly-connect
- (:prefix ("c" . "compile")
-  :desc "Quicklisp load system" "q" #'sly-quickload
-  :desc "ASDF compile and load system" "s" #'sly-asdf-load-system))
-
-
-;; (map!
-;;  :after ivy
-;;  :localleader
-;;  :map
-;;  (:prefix ("f" . "compile")
-;;   :desc "asdf compile and load system" "s" #'sly-asdf-load-system))
+    '(("^\\*Racket-REPL\\*" :ignore t :quit nil :ttl nil)
+      ("^*.rkt" :ignore t :quit nil :ttl nil)
+      )))
 
 (after! forge
   (add-to-list 'forge-alist
@@ -441,7 +503,15 @@ same directory as the org-buffer and insert a link to this file."
   (add-to-list 'forge-alist
                '("github.umn.edu" "github.umn.edu/api/v4"
                  "github.umn.edu" forge-github-repository)
-               'append))
+               'append)
+  (map! (:map forge-topic-mode-map
+         "l" nil
+         "h" nil
+         "a" nil)
+        (:map )
+        )
+
+  )
 
 
 (map! :leader
@@ -454,22 +524,36 @@ same directory as the org-buffer and insert a link to this file."
   (add-to-list 'safe-local-variable-values
                '(TeX-command-extra-options . "-shell-escape")))
 
+(setq-default indent-tabs-mode nil)
 
 ;; Tramp changes
 (setq projectile-mode-line "Projectile")
 
+;; Agda
+;; (load-file (let ((coding-system-for-read 'utf-8))
+;;                 (shell-command-to-string "agda-mode locate")))
+(setq auto-mode-alist
+   (append
+     '(("\\.agda\\'" . agda2-mode)
+       ("\\.lagda.md\\'" . agda2-mode))
+     auto-mode-alist))
 
-(defun my-put-file-name-on-clipboard ()
-  "Put the current file name on the clipboard"
-  (interactive)
-  (let ((filename (if (equal major-mode 'dired-mode)
-                      default-directory
-                    (buffer-file-name))))
-    (when filename
-      (with-temp-buffer
-        (insert filename)
-        (clipboard-kill-region (point-min) (point-max)))
-      (message filename))))
+(after! agda2-mode
+  (map! :map agda2-mode-map
+        :localleader
+        "i" #'agda2-search-about-toplevel
+        ))
+
+
+(after! rustic
+  (map!
+   (:localleader
+    :map rustic-mode-map
+    :desc "Lookup rust docs for term" "d" #'rustic-doc-search))
+
+  (set-popup-rules!
+    '(("\\*rustic-compilation\\*" :ignore t :quit nil :ttl nil)))
+  )
 
 (use-package! hy-mode
   :mode "\\.hy\\'"
@@ -507,8 +591,99 @@ same directory as the org-buffer and insert a link to this file."
   ;;   (defalias 'org-babel-execute:hy #'org-babel-execute:hy)
   ;;   (add-to-list 'org-src-lang-modes '("hy" . hy)))
   )
+(use-package! counsel-jq
+  :defer t
+  ;; :init
+  ;; (after! org-src
+  ;;   (defalias 'org-babel-execute:hy #'org-babel-execute:hy)
+  ;;   (add-to-list 'org-src-lang-modes '("hy" . hy)))
+  )
 
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+(use-package! alert
+  :commands (alert)
+  :init
+  (setq alert-default-style 'libnotify))
+
+(use-package! slack
+  :commands (slack-start)
+  :defer t
+  :init
+  (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
+  (setq slack-prefer-current-team t)
+  :config
+  (slack-register-team
+   :name "melt"
+   :default t
+   :token (auth-source-pick-first-password
+           :host "melt-umn.slack.com"
+           :user "karin010@umn.edu")
+   :subscribed-channels '((help general))
+   :full-and-display-names t)
+
+  (slack-register-team
+   :name "graphics"
+   :default nil
+   :token (auth-source-pick-first-password
+           :host "csci5607compg-3bh8296.slack.com"
+           :user "karin010@umn.edu")
+   :subscribed-channels '((general))
+   :full-and-display-names t)
+
+  (add-hook! 'slack-mode-hook #'emojify-mode)
+  (set-face-attribute 'slack-mrkdwn-code-face nil :foreground "#e74c3c" )
+  (set-face-attribute 'slack-mrkdwn-code-block-face nil :foreground "#e74c3c" )
+
+  (evil-define-key 'normal slack-info-mode-map
+    ",u" 'slack-room-update-messages)
+  (evil-define-key 'normal slack-mode-map
+    ",c" 'slack-buffer-kill
+    ",ra" 'slack-message-add-reaction
+    ",rr" 'slack-message-remove-reaction
+    ",rs" 'slack-message-show-reaction-users
+    ",pl" 'slack-room-pins-list
+    ",pa" 'slack-message-pins-add
+    ",pr" 'slack-message-pins-remove
+    ",mm" 'slack-message-write-another-buffer
+    ",me" 'slack-message-edit
+    ",md" 'slack-message-delete
+    ",u" 'slack-room-update-messages
+    ",2" 'slack-message-embed-mention
+    ",3" 'slack-message-embed-channel
+    "\C-n" 'slack-buffer-goto-next-message
+    "\C-p" 'slack-buffer-goto-prev-message)
+  (evil-define-key 'normal slack-edit-message-mode-map
+    ",k" 'slack-message-cancel-edit
+    ",s" 'slack-message-send-from-buffer
+    ",2" 'slack-message-embed-mention
+    ",3" 'slack-message-embed-channel))
+
+
+(add-hook
+ 'compilation-mode-hook
+ 'visual-line-mode
+ )
+
+(after! magit
+  (map! (:map magit-blob-mode-map
+         "n" nil
+         "p" nil)
+        (:map forge-topic-mode-map
+         "l" nil
+         "h" nil
+         "a" nil)
+        )
+  (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+  (defun my-wrap-lines ()
+    "Disable `truncate-lines' in the current buffer."
+    (setq truncate-lines nil))
+
+  (add-hook 'forge-topic-mode-hook #'my-wrap-lines)
+
+
+  )
+
+
+
 (defun yank-github-link ()
   "Quickly share a github link of what you are seeing in a buffer. Yanks
 a link you can paste in the browser."
@@ -516,11 +691,129 @@ a link you can paste in the browser."
   (let* ((remote (or (magit-get-push-remote) "origin"))
          (url (magit-get "remote" remote "url"))
          (project (if (string-prefix-p "git" url)
-                      (substring  url 15 -4)   ;; git link
-                      (substring  url 19 -4))) ;; https link
+                      (substring  url 15 -4) ;; git link
+                    (substring  url 19 -4))) ;; https link
          (link (format "https://github.com/%s/blob/%s/%s#L%d"
                        project
                        (magit-get-current-branch)
                        (magit-current-file)
                        (count-lines 1 (point)))))
     (kill-new link)))
+
+
+
+(defun my-org-babel-execute-haskell-blocks ()
+  "Wraps :{ and :} around all multi-line blocks and then evaluates the source block.
+Multi-line blocks are those where all non-indented, non-comment lines are declarations using the same token."
+  (interactive)
+  (save-excursion
+    ;; jump to top of source block
+    (my-org-jump-to-top-of-block)
+    (forward-line)
+    ;; get valid blocks
+    (let ((valid-block-start-ends (seq-filter #'my-haskell-block-valid-p (my-get-babel-blocks))))
+      (mapcar #'my-insert-haskell-braces valid-block-start-ends)
+      (org-babel-execute-src-block)
+      (mapcar #'my-delete-inserted-haskell-braces (reverse valid-block-start-ends)))))
+
+
+(defun my-get-blocks-until (until-string)
+  (let ((block-start nil)
+        (block-list nil))
+    (while (not (looking-at until-string))
+      (if (looking-at "[[:space:]]*\n")
+          (when (not (null block-start))
+            (setq block-list (cons (cons block-start (- (point) 1))
+                                   block-list)
+                  block-start nil))
+        (when (null block-start)
+          (setq block-start (point))))
+      (forward-line))
+    (when (not (null block-start))
+      (setq block-list (cons (cons block-start (- (point) 1))
+                             block-list)))))
+
+(defun my-get-babel-blocks ()
+  (my-get-blocks-until "#\\+end_src"))
+
+(defun my-org-jump-to-top-of-block ()
+  (forward-line)
+  (org-previous-block 1))
+
+(defun my-empty-line-p ()
+  (beginning-of-line)
+  (= (char-after) 10))
+
+(defun my-haskell-type-declaration-line-p ()
+  (beginning-of-line)
+  (and (not (looking-at "--"))
+       (looking-at "^.*::.*$")))
+
+(defun my-insert-haskell-braces (block-start-end)
+  (let ((block-start (car block-start-end))
+        (block-end (cdr block-start-end)))
+    (goto-char block-end)
+    (insert "\n:}")
+    (goto-char block-start)
+    (insert ":{\n")))
+
+
+(defun my-delete-inserted-haskell-braces (block-start-end)
+  (let ((block-start (car block-start-end))
+        (block-end (cdr block-start-end)))
+    (goto-char block-start)
+    (delete-char 3)
+    (goto-char block-end)
+    (delete-char 3)))
+
+
+(defun my-get-first-haskell-token ()
+  "Gets all consecutive non-whitespace text until first whitespace"
+  (save-excursion
+    (beginning-of-line)
+    (let ((starting-point (point)))
+      (re-search-forward ".*?[[:blank:]\n]")
+      (goto-char (- (point) 1))
+      (buffer-substring-no-properties starting-point (point)))))
+
+
+(defun my-haskell-declaration-line-p ()
+  (beginning-of-line)
+  (or (looking-at "^.*=.*$")  ;; has equals sign
+      (looking-at "^.*\n[[:blank:]]*|")
+      (looking-at "^.*where[[:blank:]]*$")))
+
+
+(defun my-haskell-block-valid-p (block-start-end)
+  (let ((block-start (car block-start-end))
+        (block-end (cdr block-start-end))
+        (line-count 0))
+        (save-excursion
+          (goto-char block-start)
+          (let ((token 'nil)
+                (is-valid t))
+            ;; eat top comments
+            (while (or (looking-at "--")
+                       (looking-at "{-"))
+              (forward-line))
+            (when (my-haskell-type-declaration-line-p)
+              (progn
+                (setq token (my-get-first-haskell-token)
+                      line-count 1)
+                (forward-line)))
+            (while (<= (point) block-end)
+              (let ((current-token (my-get-first-haskell-token)))
+                (cond ((string= current-token "") ; line with indentation
+                       (when (null token) (setq is-valid nil))
+                       (setq line-count (+ 1 line-count)))
+                      ((or (string= (substring current-token 0 2) "--") ;; skip comments
+                           (string= (substring current-token 0 2) "{-"))
+                       '())
+                      ((and (my-haskell-declaration-line-p)
+                            (or (null token) (string= token current-token)))
+                       (setq token current-token
+                             line-count (+ 1 line-count)))
+                      (t (setq is-valid nil)
+                         (goto-char (+ 1 block-end))))
+                (forward-line)))
+            (and is-valid (> line-count 1))))))

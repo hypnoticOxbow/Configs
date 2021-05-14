@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: setx
+# uuid: setx
+# key: setx
+# condition: t      
+# --
+\$\\{x^t\\}^N_{t=1}\$$0

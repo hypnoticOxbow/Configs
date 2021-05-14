@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: calx
+# uuid: calx
+# key: calx
+# condition: t
+# --
+\$\mathcal{X}\$$0

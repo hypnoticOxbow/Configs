@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: setxr
+# uuid: setxr
+# key: setxr
+# condition: t
+# --
+\$\\{x^t,r^t\\}_t\$$0

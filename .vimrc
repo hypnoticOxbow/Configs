@@ -13,6 +13,8 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle'}
 Plug 'Xuyuanp/nerdtree-git-plugin'
 
+Plug 'joshhartigan/vim-reddit'
+
 Plug 'vim-scripts/BufOnly.vim'
 Plug 'vim-scripts/Vimchant'
 

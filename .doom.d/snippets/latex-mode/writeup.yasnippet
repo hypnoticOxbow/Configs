@@ -1,0 +1,71 @@
+# -*- mode: snippet -*-
+# name: writeup
+# key: writeup
+# --
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Simple Sectioned Essay Template
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Note:
+% The \lipsum[#] commands throughout this template generate dummy text
+% to fill the template out. These commands should all be removed when
+% writing essay content.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[12pt]{article} % Default font size is 12pt, it can be changed here
+
+\usepackage[margin=1in]{geometry} % Required to change the page size to A4
+
+\usepackage{graphicx} % Required for including pictures
+
+% Palatino for rm and math | Helvetica for ss | Courier for tt
+\usepackage{mathpazo} % math & rm
+\linespread{1.05}        % Palatino needs more leading (space between lines)
+\usepackage[scaled]{helvet} % ss
+\usepackage{courier} % tt
+\normalfont
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%% \usepackage{minted}
+
+\usepackage{booktabs}
+\graphicspath{{Pictures/}} % Specifies the directory where pictures are stored
+
+\begin{document}
+
+\title{Assignment ${1:number}~-~ ${2:Course}\vspace{-0.5cm}}
+\author{Ian Kariniemi -- karin010 -- ID: 5219807} %replace with your name
+\date{}
+
+\maketitle
+% Guidelines:
+% Substance:
+%   include enough material in your writing. Start with a short summary of the
+%    paper, followed by your critical reflections on it. Note related work you
+%    are familiar with, connect what is in the paper with your research if
+%    relevant, think what could you do to extend the work presented or what you
+%    would do differently.
+% Synthesis:
+%    put the information in your own words. Do not lift the main points from the
+%    paper, even if you quote them. Rewrite them in your own words.
+% Critical reading:
+%    note any issue or problem you see in the paper. Feel free to address ease of
+%    reading, clarity, motivations, innovation, relevance, technical content,
+%    experimental setup, etc.
+% Creativity:
+%    think what how you would things differently, where you could apply the methods
+%    presented, how you could extend them.
+
+
+\bibliographystyle{abbrv}
+\bibliography{./writeup}
+
+\end{document}

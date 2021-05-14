@@ -1,0 +1,55 @@
+# -*- mode: snippet -*-
+# name: build
+# key: trigger-key
+# condition: t
+# --
+#!/usr/bin/env bash
+set -euo pipefail
+
+LOCAL=/TARGET/local
+
+
+if [ ! -d "./dependency" ]; then
+    echo "Cloning Dependency"
+    git clone <giturl>
+    cd dependency
+    echo "Configuring dependency..."
+    ./configure --prefix=$LOCAL
+    make -j 7
+    echo "Installing dependency..."
+    make install
+    echo "Completed dependency."
+    cd ..
+fi
+
+if [ ! -d "./target-git" ]; then
+    echo "Cloning target..."
+    git clone https://github.com/target/target.git target-git
+    cd target-git
+    # The vulnerable version
+    git checkout tags/20190801
+    ./bootstrap
+    echo "Configuring target..."
+    ./configure --prefix=$LOCAL \
+        --without-libuninameslist \
+        --disable-python-scripting \
+        --disable-python-extension \
+        --without-libspiro \
+        --without-giflib \
+        --without-libjpeg \
+        --without-cairo \
+        --without-libpng \
+        --without-libtiff \
+        --without-libreadline \
+        --disable-shared \
+        --without-cairo \
+        --without-x
+    echo "Making target..."
+    make -j 32
+    echo "Installing target..."
+    make install
+    cd ..
+    echo "Target done."
+    # ldconfig
+fi
+

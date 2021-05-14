@@ -1,5 +1,5 @@
 ﻿###
-###  vlc 3.0.11.1
+###  vlc 3.0.13
 ###
 
 ###
@@ -53,6 +53,35 @@
 
 # DVD angle (integer)
 #dvdread-angle=1
+
+[rist] # RIST input
+
+# RIST maximum packet size (bytes) (integer)
+#packet-size=1472
+
+# RIST demux/decode maximum jitter (default is 5ms) (integer)
+#maximum-jitter=5
+
+# RIST latency (ms) (integer)
+#latency=1000
+
+# RIST nack retry interval (ms) (integer)
+#retry-interval=132
+
+# RIST reorder buffer (ms) (integer)
+#reorder-buffer=70
+
+# RIST maximum retry count (integer)
+#max-retries=10
+
+# RIST nack type, 0 = range, 1 = bitmask. Default is range (integer)
+#nack-type=0
+
+# Disable NACK output packets (boolean)
+#disable-nacks=0
+
+# Do not check for a valid rtcp message from the encoder (boolean)
+#mcast-blind-nacks=0
 
 [concat] # Concatenated inputs
 
@@ -1982,6 +2011,11 @@ marq-position=0
 # Use Core Text renderer (boolean)
 #aribsub-use-coretext=0
 
+[libass] # Subtitle renderers using libass
+
+# Additional fonts directory (string)
+#ssa-fontsdir=
+
 [jpeg] # JPEG image decoder
 
 # Quality level (integer)
@@ -2011,7 +2045,7 @@ marq-position=0
 #subsdec-align=-1
 
 # Subtitle text encoding (string)
-#subsdec-encoding=
+subsdec-encoding=system
 
 # UTF-8 subtitle autodetection (boolean)
 #subsdec-autodetect-utf8=1
@@ -2831,6 +2865,23 @@ sout-x264-tune=film
 # Metacube (boolean)
 #sout-http-metacube=0
 
+[access_output_rist] # RIST stream output
+
+# RIST target packet size (bytes) (integer)
+#sout-rist-packet-size=1328
+
+# RIST data output caching size (ms) (integer)
+#sout-rist-caching=50
+
+# RIST retry-buffer queue size (ms) (integer)
+#sout-rist-buffer-size=0
+
+# SSRC used in RTP output (default is random, i.e. 0) (integer)
+#sout-rist-ssrc=0
+
+# Stream name (string)
+#sout-rist-stream-name=
+
 [access_output_srt] # SRT stream output
 
 # SRT chunk size (bytes) (integer)
@@ -3271,7 +3322,7 @@ qt-fullscreen-screennumber=2
 #sout-avi-subject=
 
 # Encoder (string)
-#sout-avi-encoder=VLC Media Player - 3.0.11.1 Vetinari
+#sout-avi-encoder=VLC Media Player - 3.0.13 Vetinari
 
 # Keywords (string)
 #sout-avi-keywords=
@@ -3462,10 +3513,10 @@ qt-fullscreen-screennumber=2
 [adjust] # Image properties filter
 
 # Image contrast (0-2) (float)
-#contrast=1.000000
+contrast=1.070000
 
 # Image brightness (0-2) (float)
-#brightness=1.000000
+brightness=1.180000
 
 # Image hue (-180..180) (float)
 #hue=0.000000
@@ -3477,7 +3528,7 @@ qt-fullscreen-screennumber=2
 #gamma=1.000000
 
 # Brightness threshold (boolean)
-#brightness-threshold=0
+brightness-threshold=1
 
 [motionblur] # Motion blur filter
 
@@ -3867,7 +3918,7 @@ aout=any
 #role=video
 
 # Audio filters (string)
-#audio-filter=
+audio-filter=compressor
 
 # Audio visualizations (string)
 #audio-visual=none
@@ -3993,7 +4044,7 @@ aout=any
 #zoom=1.000000
 
 # Deinterlace (integer)
-deinterlace=1
+#deinterlace=-1
 
 # Deinterlace mode (string)
 #deinterlace-mode=auto
@@ -4029,7 +4080,7 @@ text-renderer=any
 #sub-autodetect-path=./Subtitles, ./subtitles, ./Subs, ./subs
 
 # Force subtitle position (integer)
-#sub-margin=0
+sub-margin=-100
 
 # Subpictures source module (string)
 #sub-source=
@@ -4050,10 +4101,10 @@ text-renderer=any
 #sub-track=-1
 
 # Audio language (string)
-#audio-language=
+audio-language=ENG
 
 # Subtitle language (string)
-#sub-language=
+sub-language=ENG
 
 # Menu language (string)
 #menu-language=

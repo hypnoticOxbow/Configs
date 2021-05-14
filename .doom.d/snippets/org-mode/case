@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: case
+# uuid: case
+# key: case
+# condition: t
+# --
+\begin{cases}
+$0 \\\\
+\end{cases}

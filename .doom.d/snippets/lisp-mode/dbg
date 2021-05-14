@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: debug
+# key: dbg
+# --
+(cl-user::dbg $0)

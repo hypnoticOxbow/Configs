@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: mathb
+# key: mathb
+# --
+\begin{math}
+$0
+\end{math}

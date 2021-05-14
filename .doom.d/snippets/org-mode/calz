@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: calz
+# uuid: calz
+# key: calz
+# condition: t
+# --
+\$\mathcal{Z}\$

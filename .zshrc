@@ -43,7 +43,7 @@ export NEO_FUZZ_SLIME_PORT=6452
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="powerlevel9k/powerlevel9k"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 
 
@@ -230,10 +230,14 @@ function gt() {GIT_AUTHOR_DATE=$1 GIT_COMMITTER_DATE=$1 git commit}
 
 function yt() {youtube-dl -o - $* | castnow --quiet -}
 
+function atouch() {
+  mkdir -p $(sed 's/\(.*\)\/.*/\1/' <<< $1) && touch $1 && echo "$2" >> $1
+}
+
 
 function paste() {
   local file=${1:-/dev/stdin}
-    curl --data-binary @${file} https://p.acm.umn.edu/
+    curl --data-binary @${file} https://acm.ian.kariniemi.dev/paste
           }
 # fh - repeat history
 fh() {
@@ -251,7 +255,10 @@ function spotifydl() {docker run --rm -it -v $(pwd):/music ritiek/spotify-downlo
 export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
 export PATH=$HOME/.local/bin:$HOME/bin:/home/ian/.opam/4.06.0/bin/:/home/ian/workspace/router/openwrt/staging_dir/toolchain-mips_24kc_gcc-8.3.0_musl/bin:$PATH:$HOME/.cargo/bin/:$HOME/Projects/neo-fuzz/code/tools/
 export PATH=$PATH:$HOME/.emacs.d/bin/
-export PATH=/home/ian/build/emacs-bin/:$PATH
+export PATH=$PATH:$HOME/Projects/homer/elexir/elexirApp/
+export PATH=$PATH:$HOME/racket/bin
+export PATH=$PATH:/home/ian/Documents/School/2021-Spring/CSCI-5607/projects/final/target/release/
+#export PATH=/home/ian/build/emacs-bin/:$PATH
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -260,13 +267,13 @@ export PATH=/home/ian/build/emacs-bin/:$PATH
 #Sift Aliases
 alias cdr='cd `/bin/ls -d -1 -t /home/ian/workspace/Sift/neo-fuzz/trunk/code/test/results/* |head -1`'
 alias st='svn st | grep . | grep -v "^[?X]" | grep -v "Performing status"'
-
+alias pictures='ian@acm.ian.kariniemi.dev:~/www/.screenshots/'
 alias clip='xargs echo -n | xclip -selection clipboard -i'
 alias spotify="spotify --force-device-scale-factor=2"
 alias man="viman"
 alias pacman="pacman --color auto"
 alias evw="cd ~/Projects/PL-Research/"
-alias sch="cd ~/Documents/School/2020-Fall/"
+alias sch="cd ~/Documents/School/2021-Spring/"
 alias nf="cd ~/Projects/neo-fuzz/code/"
 alias hom="cd ~/Projects/homer"
 alias svnls="svn st | cut -c 9-"
@@ -284,7 +291,7 @@ alias lla='ls -la'
 alias lt='ls --tree'
 alias cg="export CHECKGIT=1"
 alias ncg="unset CHECKGIT"
-alias n="vim ~/.list.todo"
+alias big='du -sh * |sort -rh |head'
 alias wgetall='wget -r -nH --cut-dirs=2 --no-parent --reject="index.html*" '
 
 alias aerc='TERM=xterm aerc'
@@ -321,6 +328,8 @@ export HOMER_HOME=/home/ian/Projects/homer
 export ARCADE_HOME=/home/ian/Projects/homer/components/arcade
 export LISP_EXEC=sbcl
 export LISP_LOAD="--load"
+
+export RESTART_XOCHITL=1
 
 source /usr/bin/virtualenvwrapper_lazy.sh
 
@@ -365,3 +374,4 @@ function countTimeDiff() {
     TIME_DIFF="$HRS:$MIN:$SEC";
     echo $TIME_DIFF;
 }
+[ -f "/home/ian/.ghcup/env" ] && source "/home/ian/.ghcup/env" # ghcup-env

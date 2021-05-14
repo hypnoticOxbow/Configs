@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: calh
+# uuid: calh
+# key: calh
+# condition: t
+# --
+\$\mathcal{H}\$

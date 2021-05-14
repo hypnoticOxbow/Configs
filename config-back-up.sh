@@ -12,6 +12,7 @@ cp ~/.Xresources ./
 cp ~/.gitconfig ./
 cp ~/.config/picom/picom.conf ./
 cp ~/.config/kitty/kitty.conf ./
+cp ~/.tridactylrc ./
 git add .
 git commit -m "Config Backup $(date +%F-%H-%M)"
 git push

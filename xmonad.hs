@@ -174,20 +174,12 @@
         , ((modm .|. shiftMask,               xK_i     ), spawn "xrandr --output eDP1 --rotate inverted")
         , ((modm .|. shiftMask,               xK_u     ), spawn "xrandr --output eDP1 --rotate normal")
         , ((modm .|. shiftMask,               xK_y     ), spawn "xrandr --output eDP1 --rotate left")
-    --Touchpad
-        , ((modm .|. shiftMask, xK_m     ), spawn "xinput enable 'SYNA2B31:00 06CB:7F8B Touchpad'")
-        , ((modm,               xK_m     ), spawn "xinput disable 'SYNA2B31:00 06CB:7F8B Touchpad'")
-    --displaymgt
-        , ((modm .|. shiftMask, xK_d     ), spawn "sh /home/ian/.local/bin/displaymgt")
-        , ((modm .|. controlMask, xK_d     ), spawn "sh /home/ian/.local/bin/displaymgt --mirrored")
     --Opening emacs editor
         , ((modm .|. controlMask, xK_e     ), spawn "/home/ian/.local/bin/emacs.sh")
     --youtube-dl and play in vlc script
         , ((modm .|. controlMask, xK_d     ), spawn "~/.local/bin/downloader")
     --Screenshot
-        , ((modm .|. controlMask, xK_s     ), spawn "sh ~/.local/bin/screenshot")
-    --Timesheet time in
-        , ((modm,  xK_t   ), spawn "/home/ian/.local/bin/tmst-gui")
+        , ((modm .|. controlMask, xK_s     ), spawn "sh ~/.local/bin/leanshot-upload-selection.sh")
     --Music Player hotkeys
         , ((modm,               xK_n     ), spawn "playerctl next")
         , ((modm,               xK_b     ), spawn "playerctl play-pause")
@@ -299,6 +291,7 @@
         , className =? "ksplashsimple"  --> doFloat
         , className =? "leanshot"       --> doFloat
         , className =? "ksplashqml"     --> doFloat
+        , className =? "two_d_rectangle"--> doFloat
         , className =? "ksplashx"       --> doFloat
         , className =? "Gimp"           --> doFloat
         , resource  =? "desktop_window" --> doIgnore
@@ -369,7 +362,7 @@
             , layoutHook         = myLayout
             , manageHook         = manageScratchPad <+> myManageHook <+> manageHook def,
                 startupHook = do
-                    spawn "picom --config ~/.config/picom/picom.conf"
+                    spawn "picom --config ~/.config/picom/picom.conf --log-file ~/.picom.log --log-level DEBUG"
                     spawn "~/.local/bin/butler"
                     --setWMName "LG3D"
            }
