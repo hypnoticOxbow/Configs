@@ -402,9 +402,18 @@ RECURRENCES occasions."
   (set-face-attribute 'sly-mrepl-output-face nil
                       :foreground "MediumTurquoise"
                       :weight 'normal))
+(after! sly-tramp
+  (add-to-list 'sly-filename-translations
+               (sly-create-filename-translator
+                :machine-instance "#x70a7203"
+                :remote-host "odysseus.sift.net"
+                :username "ikariniemi")))
 
 (after! sly
   (add-to-list 'sly-contribs 'sly-tramp 'append)
+
+  (setq sly-scratch-file "/home/ian/common-lisp/scratch.lisp")
+  (add-to-list 'sly-contribs 'sly-scratch 'append)
   (setq sly-mrepl-eli-like-history-navigation t)
   (remove-hook! 'sly-mode-hook #'+common-lisp-init-sly-h)
   (remove-hook! 'sly-mode #'+common-lisp-init-sly-h)
@@ -461,7 +470,12 @@ RECURRENCES occasions."
  (:prefix ("c" . "compile")
   :desc "Quicklisp load system" "q" #'sly-quickload
   :desc "ASDF compile and load system" "s" #'sly-asdf-load-system
-  :desc "ASDF compile and test system" "t" #'sly-asdf-test-system))
+  :desc "ASDF compile and test system" "t" #'sly-asdf-test-system)
+ (:prefix ("g" . "goto")
+  :desc "Go to scratch buffer"              "s" #'sly-scratch
+  :desc "Next sticker"         "k" #'sly-stickers-next-sticker
+  :desc "Previous sticker"     "K" #'sly-stickers-prev-sticker)
+ )
 
 (after! lispyville
   (setq lispyville-key-theme

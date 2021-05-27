@@ -5,7 +5,7 @@
 ;; (package! some-package)
 ;; (package! another-package :recipe (:host github :repo "username/repo"))
 ;; (package! builtin-package :disable t)
-(package! badwolf-theme)
+;; (package! badwolf-theme)
 ;; (package! sly :pin "68561f1b7b66fa0240766ece836bb04da31ea17d")
 ;; (package! sly-macrostep :pin "5113e4e926cd752b1d0bcc1508b3ebad5def5fad")
 ;; (package! sly-repl-ansi-color :pin "b9cd52d1cf927bf7e08582d46ab0bcf1d4fb5048")
@@ -20,6 +20,7 @@
 
 (package! evil-escape :disable t)
 
+(package! toc-mode)
 
 ;; (package! md4rd)
 ;; (package! org-pretty-table :recipe (:host github :repo "Fuco1/org-pretty-table"))

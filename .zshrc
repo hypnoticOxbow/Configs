@@ -310,6 +310,8 @@ rhimes() { eval $(ssh-agent) && mosh ikariniemi@rhimes0 -- tmux attach -t 0 }
 
 achilles() { eval $(ssh-agent) && mosh ikariniemi@achilles -- tmux attach -t 0 }
 
+odysseus() { eval $(ssh-agent) && mosh ikariniemi@odysseus -- tmux attach -t 0 }
+
 argo() { eval $(ssh-agent) && mosh ian@160.94.179.157 -- tmux attach -t 0 }
 
 ## OPAM configuration
