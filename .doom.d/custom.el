@@ -14,7 +14,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#10151a" "#737c8c"))
  '(objed-cursor-color "#e74c3c")
  '(org-agenda-files
-   '("~/Nextcloud/Notes/homer-meetings.org" "~/Nextcloud/Notes/school.org" "~/Nextcloud/Notes/homer.org" "/home/ian/org/org-check.org" "/home/ian/org/recommendations.org" "/home/ian/org/todo.org"))
+   '("~/Nextcloud/Notes/neo-fuzz.org" "~/Nextcloud/Notes/homer-meetings.org" "~/Nextcloud/Notes/school.org" "~/Nextcloud/Notes/homer.org" "/home/ian/org/org-check.org" "/home/ian/org/recommendations.org" "/home/ian/org/todo.org"))
  '(pdf-view-midnight-colors (cons "#f8f8f0" "#21272e"))
  '(rustic-ansi-faces
    ["#21272e" "#e74c3c" "#53df83" "#ECBE7B" "#56b5c2" "#FFB8D1" "#56b6c2" "#f8f8f0"])
