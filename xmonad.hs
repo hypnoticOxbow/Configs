@@ -21,7 +21,7 @@
     import XMonad.Actions.WithAll (sinkAll)
     import XMonad.Config.Desktop (desktopLayoutModifiers)
     --import XMonad.Config.Xfce
-    import XMonad.Hooks.EwmhDesktops (ewmh, ewmhFullscreen) -- for touchegg
+    import XMonad.Hooks.EwmhDesktops (ewmh) -- for touchegg
     import XMonad.Hooks.FadeInactive (fadeInactiveLogHook)
     import XMonad.Hooks.ManageDocks
     import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat, doRectFloat, isDialog)
@@ -348,7 +348,7 @@
              mapM
                 (\i -> spawnPipe $ "xmobar -x " ++ show i ++ " /home/ian/.xmonad/.xmobarrc")
                 [0 .. n - 1]
-           xmonad $ docks $ ewmhFullscreen $ ewmh $ def {
+           xmonad $ docks $ ewmh $ def {
             terminal = myTerminal,
             modMask  = mod4Mask, -- Windows key
             workspaces         = ["1","2","3","4", "q", "w", "e", "r", "5","6","7","8","9", "0", "-", "="],
@@ -362,7 +362,7 @@
             , layoutHook         = myLayout
             , manageHook         = manageScratchPad <+> myManageHook <+> manageHook def,
                 startupHook = do
-                    spawn "picom --config ~/.config/picom/picom.conf --log-file ~/.picom.log --log-level DEBUG"
+                    -- spawn "picom --config ~/.config/picom/picom.conf --log-file ~/.picom.log --log-level DEBUG"
                     spawn "~/.local/bin/butler"
                     --setWMName "LG3D"
            }

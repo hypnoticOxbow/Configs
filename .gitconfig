@@ -29,21 +29,21 @@
     new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
 [oh-my-zsh]
 	hide-status = 1
+[github "umn"]
+	edu = git.tb.int
+[hub]
+	host = github.umn.edu
+	protocol = https
 [push]
 	default = matching
+[github "umn.edu/api/v3"]
+	user = karin010
 [github]
 	user = hypnoticOxbow
+	oauth-token = 2c26bcd3aed185b21f99bfbb80b48856
 [svn-remote "svn"]
 	automkdirs = false
 [status]
 	submoduleSummary = true
 [diff]
 	submodule = log
-[gitlab "git.sift.net/api/v4"]
-	user = ikariniemi
-[github "github.umn.edu/api/v4"]
-	user = karin010
-[http]
-	postBuffer = 524288000
-[pull]
-	ff = only

@@ -12,7 +12,7 @@
 (setq auto-save-default nil)
 
 
-(setq! doom-font (font-spec :family "PragmataPro Liga" :size 15))
+(setq! doom-font (font-spec :family "PragmataPro Liga" :size 18))
 
 ;; (setq! doom-font (font-spec :family "Fira Code" :size 14))
 ;; (setq! doom-unicode-font (font-spec :family "Noto Sans Mono" :size 14))
@@ -398,7 +398,6 @@ RECURRENCES occasions."
 
 
 
-
 (after! sly-mrepl
   (set-face-attribute 'sly-mrepl-output-face nil
                       :foreground "MediumTurquoise"
@@ -462,25 +461,6 @@ RECURRENCES occasions."
       ;; Do not display debugger or inspector buffers in a popup window. These
       ;; buffers are meant to be displayed with sufficient vertical space.
       ("^\\*sly-\\(?:db\\|inspector\\)" :ignore t))))
-
-(map! :leader
-      (:prefix-map ("a" . "applications")
-       (:prefix ("s" . "slack")
-        :desc "Slack Start" "s" #'slack-start)))
-
-(map!
- :after slack
- :leader
- (:prefix-map ("a" . "applications")
-  (:prefix ("s" . "slack")
-   :desc "Change team" "t" #'slack-change-current-team
-   :desc "Open channel" "c" #'slack-channel-select
-   :desc "IM User" "i" #'slack-im-select
-   :desc "All threads" "a" #'slack-all-threads
-   :desc "File upload" "f" #'slack-file-upload
-   ;; uncomment when it starts working :(
-   ;; :desc "All unreads" "u" #'slack-
-   )))
 
 (map!
  :after sly

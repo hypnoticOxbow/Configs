@@ -272,9 +272,6 @@ alias clip='xargs echo -n | xclip -selection clipboard -i'
 alias spotify="spotify --force-device-scale-factor=2"
 alias man="viman"
 alias pacman="pacman --color auto"
-alias pacfind="pacman -Slq | fzf --multi --preview 'pacman -Si {1}' | xargs -ro sudo pacman -S"
-alias yayfind="paru -Slq | fzf --multi --preview 'paru -Si {1}' | xargs -ro paru -S"
-alias pacinst="pacman -Slq | fzf --multi --preview 'cat <(pacman -Si {1}) <(pacman -Fl {1} | awk "{print \$2}")' | xargs -ro sudo pacman -S"
 alias evw="cd ~/Projects/PL-Research/"
 alias sch="cd ~/Documents/School/2021-Spring/"
 alias nf="cd ~/Projects/neo-fuzz/code/"
@@ -307,13 +304,15 @@ alias loadnvm=". /usr/share/nvm/init-nvm.sh"
 
 
 #ssh tmux
+scamm() { eval $(ssh-agent) && mosh ikariniemi@scamm0 -- tmux attach -t 0 }
 
-rhimes() { eval $(ssh-agent) && mosh ikariniemi@rhimes0.sift.net -- tmux attach -t 0 }
-rhimes1() { eval $(ssh-agent) && mosh ikariniemi@rhimes1.sift.net -- tmux attach -t 0 }
+rhimes() { eval $(ssh-agent) && mosh ikariniemi@rhimes0 -- tmux attach -t 0 }
 
-achilles() { eval $(ssh-agent) && mosh ikariniemi@achilles.sift.net -- tmux attach -t 0 }
+rhimes1() { eval $(ssh-agent) && mosh ikariniemi@rhimes1 -- tmux attach -t 0 }
 
-odysseus() { eval $(ssh-agent) && mosh ikariniemi@odysseus.sift.net -- tmux attach -t 0 }
+achilles() { eval $(ssh-agent) && mosh ikariniemi@achilles -- tmux attach -t 0 }
+
+odysseus() { eval $(ssh-agent) && mosh ikariniemi@odysseus -- tmux attach -t 0 }
 
 argo() { eval $(ssh-agent) && mosh ian@160.94.179.157 -- tmux attach -t 0 }
 
