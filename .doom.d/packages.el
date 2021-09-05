@@ -13,14 +13,14 @@
 (package! sly-quicklisp)
 (package! common-lisp-snippets)
 (package! ob-hy)
-(package! counsel-jq)
+;; (package! counsel-jq)
 
 (package! alert)
 (package! slack)
 
 (package! evil-escape :disable t)
 
-(package! toc-mode)
+;; (package! toc-mode)
 
 ;; (package! md4rd)
 ;; (package! org-pretty-table :recipe (:host github :repo "Fuco1/org-pretty-table"))

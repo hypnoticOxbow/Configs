@@ -328,7 +328,7 @@ RECURRENCES occasions."
   (map! :map evil-org-mode-map
         :n "zs"  #'org-latex-preview)
   (evil-define-key 'normal org-mode-map (kbd "z s") #'org-latex-preview)
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 0.8))
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
   (add-to-list 'org-latex-packages-alist
                '("" "tikz" t))
   (eval-after-load "preview"

@@ -379,4 +379,5 @@ function countTimeDiff() {
     TIME_DIFF="$HRS:$MIN:$SEC";
     echo $TIME_DIFF;
 }
-[ -f "/home/ian/.ghcup/env" ] && source "/home/ian/.ghcup/env" # ghcup-env
+
+. ~/.ghcup/env
