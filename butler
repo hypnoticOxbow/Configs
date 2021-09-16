@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Load resources
+udiskie &
+
+xrdb -merge ~/.Xresources
+
+hsetroot -solid midnightblue
+
+trayer --edge bottom --align right --SetDockType true --SetPartialStrut true --expand true  --height 40 --transparent true --alpha 0 --tint 0x282c34 &
+
+#xscreensaver -no-splash &
+# /home/ian/.screenlayout/thre.sh
+
+feh --randomize --bg-fill ~/Pictures/wallpaper/* &
+
+
+
+#keyboard setup
+setxkbmap -layout us -variant altgr-intl -option nodeadkeys
+
+#subject to experiment
+#xset m 0 0"kj bB
+# Fire up apps
+
+
+if [ -x /usr/bin/nm-applet ] ; then
+   nm-applet --sm-disable &
+fi
+
+if [ -x /usr/bin/xfce4-power-manager ] ; then
+   xfce4-power-manager &
+fi
+
+pa-applet &
+redshift-gtk &
+#hasmail &
+
+xsetroot -cursor_name left_ptr
+kalu &
+
+
+#Open Signal chrome app, auto redirected to pane 3
+signal-desktop &
+#Open browser, auto redirected to pane 2
+#vivaldi-stable &
+firefox &
+
