@@ -12,7 +12,7 @@
 (setq auto-save-default nil)
 
 
-(setq! doom-font (font-spec :family "PragmataPro Liga" :size 15))
+(setq! doom-font (font-spec :family "PragmataPro Liga" :size 26))
 
 ;; (setq! doom-font (font-spec :family "Fira Code" :size 14))
 ;; (setq! doom-unicode-font (font-spec :family "Noto Sans Mono" :size 14))
@@ -468,6 +468,8 @@ RECURRENCES occasions."
        (:prefix ("s" . "slack")
         :desc "Slack Start" "s" #'slack-start)))
 
+
+
 (map!
  :after slack
  :leader
@@ -851,3 +853,17 @@ Multi-line blocks are those where all non-indented, non-comment lines are declar
                          (goto-char (+ 1 block-end))))
                 (forward-line)))
             (and is-valid (> line-count 1))))))
+
+(dolist (fn '(definition references))
+  (fset (intern (format "+lookup/%s-other-window" fn))
+        (lambda (identifier &optional arg)
+          "TODO"
+          (interactive (list (doom-thing-at-point-or-region)
+                             current-prefix-arg))
+          (let ((pt (point)))
+            (switch-to-buffer-other-window (current-buffer))
+            (goto-char pt)
+            (funcall (intern (format "+lookup/%s" fn)) identifier arg)))))
+
+(map! (:when (featurep! :tools lookup)
+       :nv "gd"  #'+lookup/definition-other-window))
