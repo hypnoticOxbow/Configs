@@ -24,12 +24,6 @@ export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.g
 
 
 
-#Ruby gems stuff
-#Setting the GEM_PATH and GEM_HOME variables may not be necessary, check 'gem env' output to verify whether both variables already exist
-GEM_HOME=$(ls -t -U | ruby -e 'puts Gem.user_dir')
-GEM_PATH=$GEM_HOME
-export PATH=$PATH:$GEM_HOME/bin
-
 
 
 export PASSWORD_STORE_CLIP_TIME=1000
@@ -177,7 +171,7 @@ POWERLEVEL9K_MULTILINE_SECOND_PROMPT_PREFIX=" ❯ "
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 # removed: git, because svn is slow otherwise
-plugins=(sudo archlinux last-working-dir autojump)
+plugins=(sudo archlinux last-working-dir)
 
 
 
@@ -276,7 +270,7 @@ alias pacfind="pacman -Slq | fzf --multi --preview 'pacman -Si {1}' | xargs -ro 
 alias yayfind="paru -Slq | fzf --multi --preview 'paru -Si {1}' | xargs -ro paru -S"
 alias pacinst="pacman -Slq | fzf --multi --preview 'cat <(pacman -Si {1}) <(pacman -Fl {1} | awk "{print \$2}")' | xargs -ro sudo pacman -S"
 alias evw="cd ~/Projects/PL-Research/"
-alias sch="cd ~/Documents/School/2021-Spring/"
+alias sch="cd ~/Documents/School/2022-Spring/"
 alias nf="cd ~/Projects/neo-fuzz/code/"
 alias hom="cd ~/Projects/homer"
 alias svnls="svn st | cut -c 9-"
@@ -318,7 +312,7 @@ odysseus() { eval $(ssh-agent) && mosh ikariniemi@odysseus.sift.net -- tmux atta
 argo() { eval $(ssh-agent) && mosh ian@160.94.179.157 -- tmux attach -t 0 }
 
 ## OPAM configuration
-#. /home/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
+. /home/ian/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
 #source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ## Virtual ENV
 export WORKON_HOME=~/.virtualenvs

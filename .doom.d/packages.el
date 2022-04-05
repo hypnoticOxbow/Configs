@@ -20,6 +20,9 @@
 
 (package! evil-escape :disable t)
 
+;; (package! polymode)
+;; (package! org-agda-mode :recipe (:host github :repo "alhassy/org-agda-mode"))
+
 ;; (package! toc-mode)
 
 ;; (package! md4rd)

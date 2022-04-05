@@ -7,7 +7,9 @@ cp ~/.config/nvim/init.vim ./.vimrc
 cp ~/.config/dunst/dunstrc ./
 cp ~/.bashrc ./
 cp ~/.zshrc ./
-# cp -r ~/.doom.d/ ./
+cp ~/.doom.d/config.el ./.doom.d/
+cp ~/.doom.d/init.el ./.doom.d/
+cp ~/.doom.d/packages.el ./.doom.d/
 cp ~/.Xresources ./
 cp ~/.gitconfig ./
 cp ~/.config/picom/picom.conf ./

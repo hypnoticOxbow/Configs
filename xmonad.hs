@@ -27,6 +27,7 @@
     import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat, doRectFloat, isDialog)
     import XMonad.Hooks.SetWMName (setWMName)
     import XMonad.Layout.NoBorders (smartBorders)
+    import XMonad.Layout.SimplestFloat (simplestFloat)
   --added for spacing
     import XMonad.Layout.Gaps
     import XMonad.Layout.Spacing
@@ -133,8 +134,13 @@
         , ((modm .|. shiftMask, xK_Down),  shiftToNext)
         , ((modm .|. shiftMask, xK_Up),    shiftToPrev)
         , ((modm,               xK_f     ), spawn "rofi -show run")
-        , ((modm .|. shiftMask, xK_f     ), spawn "eidolon menu")
+        , ((modm .|. shiftMask, xK_f     ), spawn "/home/ian/build/eidolon/target/release/eidolon menu")
 
+    -- Dunst stuff
+        , ((modm, xK_a     ), spawn "dunstctl context")
+        , ((modm, xK_s     ), spawn "dunstctl history-pop")
+        , ((controlMask, xK_space  ), spawn "dunstctl close")
+        , ((controlMask .|. shiftMask, xK_space  ), spawn "dunstctl close-all")
     -- close focused window
         , ((modm, xK_x     ), kill)
         , ((modm, xK_o ), scratchpadSpawnActionTerminal myScratchPadTerminal)
@@ -224,7 +230,7 @@
 
 
 
-    myLayout = avoidStruts $ gaps [(U, 30), (R, 15), (L, 15), (D, 30)] $ spacingRaw True (Border 0 10 10 10) True (Border 10 10 10 10) True $ windowNavigation  $ (tiled ||| Mirror tiled ||| Full)
+    myLayout = avoidStruts $ gaps [(U, 30), (R, 15), (L, 15), (D, 30)] $ spacingRaw True (Border 0 10 10 10) True (Border 10 10 10 10) True $ windowNavigation  $ (tiled ||| Mirror tiled ||| Full ||| simplestFloat )
                    where
                        tiled = Tall nmaster delta ratio
                        nmaster = 1
@@ -298,6 +304,7 @@
         , resource  =? "gnomedesktop"   --> doIgnore
         , className =? "jetbrains-idea" --> doFloat
         , className =? "payday2_release" --> doFullFloat
+        , className =? "stellaris" --> doFullFloat
         , isFullscreen                  --> doFullFloat
         , isDialog                      --> doF W.swapUp
         , return True --> doF W.swapDown]

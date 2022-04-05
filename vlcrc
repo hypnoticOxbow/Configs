@@ -1,5 +1,5 @@
 ﻿###
-###  vlc 3.0.13
+###  vlc 3.0.17.3
 ###
 
 ###
@@ -199,6 +199,9 @@
 # Audio CD device (string)
 #cd-audio=/dev/sr0
 
+# Musicbrainz Server (string)
+#musicbrainz-server=musicbrainz.org
+
 # CDDB Server (string)
 #cddb-server=freedb.videolan.org
 
@@ -207,20 +210,20 @@
 
 [access_srt] # SRT input
 
-# SRT chunk size (bytes) (integer)
-#chunk-size=1316
-
 # Return poll wait after timeout milliseconds (-1 = infinite) (integer)
 #poll-timeout=-1
 
 # SRT latency (ms) (integer)
-#latency=125
+#latency=120
 
 # Password for stream encryption (string)
 #passphrase=
 
 # Crypto key length in bytes (integer)
 #key-length=16
+
+#  SRT Stream ID (string)
+#streamid=
 
 [libbluray] # Blu-ray Disc support (libbluray)
 
@@ -896,11 +899,6 @@ compressor-makeup-gain=7.500000
 # Dry Mix (float)
 #dry-mix=0.400000
 
-[stream_out_chromaprint] # Chromaprint stream output
-
-# Duration of the fingerprinting (integer)
-#duration=90
-
 [mosaic_bridge] # Mosaic bridge stream output
 
 # ID (string)
@@ -1272,7 +1270,7 @@ compressor-makeup-gain=7.500000
 #alsa-audio-channels=6
 
 # Software gain (float)
-#alsa-gain=1.000000
+alsa-gain=0.125000
 
 [afile] # File audio output
 
@@ -1899,7 +1897,7 @@ marq-position=0
 #avcodec-codec=
 
 # Hardware decoding (string)
-#avcodec-hw=any
+avcodec-hw=vdpau_avcodec
 
 # Threads (integer)
 #avcodec-threads=0
@@ -2884,20 +2882,26 @@ sout-x264-tune=film
 
 [access_output_srt] # SRT stream output
 
-# SRT chunk size (bytes) (integer)
-#chunk-size=1316
-
 # Return poll wait after timeout milliseconds (-1 = infinite) (integer)
-#poll-timeout=100
+#poll-timeout=-1
 
 # SRT latency (ms) (integer)
-#latency=125
+#latency=120
 
 # Password for stream encryption (string)
 #passphrase=
 
+# SRT maximum payload size (bytes) (integer)
+#payload-size=1316
+
+# SRT maximum bandwidth ceiling (bytes) (integer)
+#bandwidth-overhead-limit=25
+
 # Crypto key length in bytes (integer)
 #key-length=16
+
+#  SRT Stream ID (string)
+#streamid=
 
 [udp] # UDP stream output
 
@@ -3084,13 +3088,13 @@ qt-fullscreen-screennumber=2
 #dither-depth=0
 
 # Desaturation strength (float)
-#desat-strength=0.750000
+#desat-strength=0.000000
 
 # Desaturation exponent (float)
-#desat-exponent=1.500000
+#desat-exponent=0.000000
 
 # Desaturation base (float)
-#desat-base=0.180000
+#desat-base=0.000000
 
 # Maximum brightness boost (float)
 #max-boost=0.000000
@@ -3322,7 +3326,7 @@ qt-fullscreen-screennumber=2
 #sout-avi-subject=
 
 # Encoder (string)
-#sout-avi-encoder=VLC Media Player - 3.0.13 Vetinari
+#sout-avi-encoder=VLC Media Player - 3.0.17.3 Vetinari
 
 # Keywords (string)
 #sout-avi-keywords=
@@ -3882,7 +3886,7 @@ freetype-outline-thickness=6
 #volume-step=12.800000
 
 # Remember the audio volume (boolean)
-#volume-save=1
+volume-save=0
 
 # Force S/PDIF support (boolean)
 #spdif=0
@@ -3912,7 +3916,7 @@ freetype-outline-thickness=6
 #audio-time-stretch=1
 
 # Audio output module (string)
-aout=any
+aout=alsa
 
 # Media role (string)
 #role=video
@@ -4098,7 +4102,7 @@ sub-margin=-100
 #audio-track=-1
 
 # Subtitle track (integer)
-#sub-track=-1
+sub-track=1
 
 # Audio language (string)
 audio-language=ENG
@@ -4389,7 +4393,7 @@ vod-server=any
 #open=
 
 # Automatically preparse items (boolean)
-#auto-preparse=1
+auto-preparse=0
 
 # Preparsing timeout (integer)
 #preparse-timeout=5000

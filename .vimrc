@@ -18,7 +18,7 @@ Plug 'joshhartigan/vim-reddit'
 Plug 'vim-scripts/BufOnly.vim'
 Plug 'vim-scripts/Vimchant'
 
-Plug 'tpope/vim-fugitive'
+"Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
 Plug 'terryma/vim-multiple-cursors'
 "Latex funness
@@ -41,7 +41,7 @@ Plug 'moll/vim-node', {'for' : 'javascript'}
 
 Plug 'sjl/badwolf'
 
-Plug 'tpope/vim-fugitive'
+"Plug 'tpope/vim-fugitive'
 "Plug 'airblade/vim-gitgutter'
 
 Plug 'mhinz/vim-startify'
@@ -70,9 +70,9 @@ Plug 'justinmk/vim-sneak'
 Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-surround'
 
-Plug 'Shougo/deoplete.nvim' , { 'do': ':UpdateRemotePlugins' }
-Plug 'https://github.com/copy/deoplete-ocaml', {'for' : 'ocaml'}
-Plug 'deathlyfrantic/deoplete-spell', {'for' : [ 'tex', 'markdown' ]}
+"Plug 'Shougo/deoplete.nvim' , { 'do': ':UpdateRemotePlugins' }
+"Plug 'https://github.com/copy/deoplete-ocaml', {'for' : 'ocaml'}
+"Plug 'deathlyfrantic/deoplete-spell', {'for' : [ 'tex', 'markdown' ]}
 Plug 'https://github.com/w0rp/ale.git', {'for' : 'ocaml'}
 Plug 'roxma/nvim-yarp'
 "Plug 'vim-syntastic/syntastic', {'for' : 'ocaml'}

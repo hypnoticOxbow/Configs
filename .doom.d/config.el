@@ -10,10 +10,15 @@
 ;; (setq! sly-contribs )
 (setq! display-line-numbers-type 't)
 (setq auto-save-default nil)
+(setq! gc-cons-threshold 1677721666)
 
+(setq! doom-font (font-spec :family "PragmataPro Liga" :size 15))
 
-(setq! doom-font (font-spec :family "PragmataPro Liga" :size 26))
-
+;; Org bibliography ref stuff
+(setq! bibtex-completion-bibliography '("/home/ian/org/resources/bibliography/refs.bib"))
+(after! ivy
+  (map! :map ivy-minibuffer-map
+        "C-<backspace>" #'ivy-immediate-done))
 ;; (setq! doom-font (font-spec :family "Fira Code" :size 14))
 ;; (setq! doom-unicode-font (font-spec :family "Noto Sans Mono" :size 14))
 ;;
@@ -23,19 +28,23 @@
 ;; Flyspell config (if we adopt it)
 ;; (map! :i "C-i" #'flyspell-auto-correct-word)
 
+
+
+
+
 (defun number-region (start end)
   (interactive "r")
   (let* ((count 1)
-     (indent-region-function (lambda (start end)
-                   (save-excursion
-                     (setq end (copy-marker end))
-                     (goto-char start)
-                     (while (< (point) end)
-                       (or (and (bolp) (eolp))
-                       (insert (format "%d. " count))
-                       (setq count (1+ count)))
-                       (forward-line 1))
-                     (move-marker end nil)))))
+         (indent-region-function (lambda (start end)
+                                   (save-excursion
+                                     (setq end (copy-marker end))
+                                     (goto-char start)
+                                     (while (< (point) end)
+                                       (or (and (bolp) (eolp))
+                                           (insert (format "%d. " count))
+                                           (setq count (1+ count)))
+                                       (forward-line 1))
+                                     (move-marker end nil)))))
     (indent-region start end)))
 
 (setq lsp-pyls-plugins-pycodestyle-enabled nil)
@@ -367,9 +376,12 @@ RECURRENCES occasions."
       (:prefix ("p" . "proof")
        "c" #'proof-assert-until-point-interative))
 
+(setq-default TeX-engine 'pdflatex)
 
 (after! evil-tex
   (setq! TeX-electric-sub-and-superscript 'nil)
+  (setq! LaTeX-command "pdflatex")
+  ;; (setq-hook! LaTeX-mode TeX-command-default "xelatex")
   (map! :map evil-tex-mode-map
         :localleader
         :desc "Compile Document"    "a" #'TeX-command-run-all
@@ -467,8 +479,6 @@ RECURRENCES occasions."
       (:prefix-map ("a" . "applications")
        (:prefix ("s" . "slack")
         :desc "Slack Start" "s" #'slack-start)))
-
-
 
 (map!
  :after slack
@@ -568,13 +578,22 @@ RECURRENCES occasions."
 ;; Agda
 ;; (load-file (let ((coding-system-for-read 'utf-8))
 ;;                 (shell-command-to-string "agda-mode locate")))
-(setq auto-mode-alist
-   (append
-     '(("\\.agda\\'" . agda2-mode)
-       ("\\.lagda.md\\'" . agda2-mode))
-     auto-mode-alist))
 
+
+(setq auto-mode-alist
+        (append
+         '(("\\.agda\\'" . agda2-mode)
+           ("\\.lagda.md\\'" . agda2-mode))
+         auto-mode-alist))
 (after! agda2-mode
+  (setq auto-mode-alist
+        (append
+         '(("\\.agda\\'" . agda2-mode)
+           ("\\.lagda.md\\'" . agda2-mode))
+         auto-mode-alist))
+  (add-to-list 'agda2-program-args "+RTS -M8G" )
+  (set-popup-rules!
+    '(("\\*Agda information\\*" :ignore t :quit nil :ttl nil)))
   (map! :map agda2-mode-map
         :localleader
         "i" #'agda2-search-about-toplevel
@@ -642,7 +661,7 @@ RECURRENCES occasions."
 
 (use-package! slack
   :commands (slack-start)
-  :defer t
+  ;; :defer t
   :init
   (setq slack-buffer-emojify t) ;; if you want to enable emoji, default nil
   (setq slack-prefer-current-team t)
@@ -652,16 +671,21 @@ RECURRENCES occasions."
    :default t
    :token (auth-source-pick-first-password
            :host "melt-umn.slack.com"
-           :user "karin010@umn.edu")
-   :subscribed-channels '((help general))
+           :user "karin010@umn.edu"
+           :type 'netrc)
+   :subscribed-channels '((help general silver))
    :full-and-display-names t)
-
   (slack-register-team
-   :name "graphics"
-   :default nil
+   :name "5525"
+   :default t
    :token (auth-source-pick-first-password
-           :host "csci5607compg-3bh8296.slack.com"
-           :user "karin010@umn.edu")
+           :host "csci-55252022.slack.com"
+           :user "karin010@umn.edu"
+           :type 'netrc)
+   :cookie (auth-source-pick-first-password
+            :host "csci-55252022.slack.com"
+            :user "karin010@umn.edu^cookie"
+            :type 'netrc)
    :subscribed-channels '((general))
    :full-and-display-names t)
 

@@ -45,4 +45,7 @@ signal-desktop &
 #Open browser, auto redirected to pane 2
 #vivaldi-stable &
 firefox &
-
+# Set up auto locking on suspend
+#xss-lock /home/ian/.local/bin/lock
+# Set up dim after 15 minutes, suspend at 20 minutes
+#xset s 2800 3800

@@ -1,5 +1,5 @@
 Config {
-       font = "xft:Hack:size=6:bold:antialias=true"
+       font = "xft:Hack:size=12:bold:antialias=true"
        , bgColor = "#282c34"
        , fgColor = "#bbc2cf"
        , position = TopW L 100
