@@ -49,3 +49,5 @@ firefox &
 #xss-lock /home/ian/.local/bin/lock
 # Set up dim after 15 minutes, suspend at 20 minutes
 #xset s 2800 3800
+
+emacs --daemon &

@@ -20,6 +20,12 @@
 
 (package! evil-escape :disable t)
 
+(package! org-pandoc-import
+  :recipe (:host github
+           :repo "tecosaur/org-pandoc-import"
+           :files ("*.el" "filters" "preprocessors")))
+
+(package! frames-only-mode :recipe (:host github :repo "davidshepherd7/frames-only-mode"))
 ;; (package! polymode)
 ;; (package! org-agda-mode :recipe (:host github :repo "alhassy/org-agda-mode"))
 

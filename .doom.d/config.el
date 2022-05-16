@@ -14,6 +14,7 @@
 
 (setq! doom-font (font-spec :family "PragmataPro Liga" :size 15))
 
+
 ;; Org bibliography ref stuff
 (setq! bibtex-completion-bibliography '("/home/ian/org/resources/bibliography/refs.bib"))
 (after! ivy
@@ -29,7 +30,9 @@
 ;; (map! :i "C-i" #'flyspell-auto-correct-word)
 
 
-
+;; Emacs performace things
+;; Long lines
+(setq-default bidi-paragraph-direction 'left-to-right)
 
 
 (defun number-region (start end)
@@ -104,6 +107,12 @@
 ;; Compile mode changes
   ;; (evil-set-initial-state 'compilation-mode 'normal)
 
+(use-package! frames-only-mode)
+(frames-only-mode)
+
+
+
+
 (map!
  :map special-mode-map
  :n "h" nil
@@ -130,7 +139,7 @@
 ;;     "]]" 'compilation-next-file
 ;;     "gr" 'recompile))
 
-(setq! ein:worksheet-enable-undo 't)
+
 (after! pipenv
   (map!
    :localleader
@@ -146,6 +155,9 @@
     ))
 
 (after! ein-notebook
+  (setq! ein:worksheet-enable-undo 't)
+  (setq! ein:output-area-inlined-images 't)
+  (add-hook! 'ein:markdown-mode-hook #'visual-line-mode)
   (set-popup-rules!
     '(("^\\*ein:.*\.ipynb" :ignore t :quit nil :ttl nil)
       ("\*ein: http://.*\.ipynb" :ignore t :quit nil :ttl nil)
@@ -337,15 +349,16 @@ RECURRENCES occasions."
   (map! :map evil-org-mode-map
         :n "zs"  #'org-latex-preview)
   (evil-define-key 'normal org-mode-map (kbd "z s") #'org-latex-preview)
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
-  (add-to-list 'org-latex-packages-alist
-               '("" "tikz" t))
-  (eval-after-load "preview"
-    '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t))
-  (setq org-preview-latex-default-process 'imagemagick)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.4))
+  ;; (add-to-list 'org-latex-packages-alist
+  ;;              '("" "tikz" t))
+  ;; (eval-after-load "preview"
+  ;;   '(add-to-list 'preview-default-preamble "\\PreviewEnvironment{tikzpicture}" t))
+  ;; (setq org-preview-latex-default-process 'imagemagick)
   (add-to-list 'org-latex-packages-alist '("" "bbold" t))
   (setq org-link-file-path-type 'adaptive))
 
+(use-package! org-pandoc-import :after org)
 (after! ox-pandoc
   (setq org-pandoc-options-for-latex-pdf '((pdf-engine . "xelatex")))
   )
@@ -423,10 +436,15 @@ RECURRENCES occasions."
                 :username "ikariniemi")))
 
 (after! sly
-  (add-to-list 'sly-contribs 'sly-tramp 'append)
 
-  (setq sly-scratch-file "/home/ian/common-lisp/scratch.lisp")
-  (add-to-list 'sly-contribs 'sly-scratch 'append)
+  ;; Uncomment once you install sly-tramp somewhere
+  ;; (add-to-list 'sly-contribs 'sly-tramp 'append)
+  ;; (setq sly-scratch-file "/home/ian/common-lisp/scratch.lisp")
+  ;; Uncomment once you install sly-scratch somewhere
+  ;; (add-to-list 'sly-contribs 'sly-scratch 'append)
+  ;;
+  ;; makes history navigation via `C-r`, `M-p` and `M-n` keep the current input
+  ;; and add the history input at point.
   (setq sly-mrepl-eli-like-history-navigation t)
   (remove-hook! 'sly-mode-hook #'+common-lisp-init-sly-h)
   (remove-hook! 'sly-mode #'+common-lisp-init-sly-h)
@@ -451,7 +469,9 @@ RECURRENCES occasions."
   ;;         (ccl ("ccl") :coding-system utf-8-unix)
   ;;         ))
   (add-hook! 'lispy-mode-hook (semantic-mode -1))
+  ;; Drop clhs copy here and uncomment to have local clhs, open it in browser.
   (setq common-lisp-hyperspec-root "file:///home/ian/.local/lib/HyperSpec/")
+  ;; I dislike autostart
   (setq sly-auto-start 'never)
   ;; (add-hook 'sly-mode-hook #'lispy-mode)
   ;; (add-hook 'lispy-mode-hook #'lispyville-mode)
@@ -464,7 +484,8 @@ RECURRENCES occasions."
   (define-key sly-inspector-mode-map (kbd "h") #'left-char)
   (define-key sly-inspector-mode-map (kbd "l") #'right-char)
   (define-key sly-db-mode-map (kbd "C-o") #'sly-db-toggle-details)
-  (evil-define-key 'normal sly-mode-map (kbd "g d") #'sly-edit-definition)
+  ;; Evil-mode specific, uncomment if you use evil mode
+  ;; (evil-define-key 'normal sly-mode-map (kbd "g d") #'sly-edit-definition)
 
   (set-popup-rules!
     '(("^\\*sly-mrepl" :ignore t :quit nil :ttl nil)

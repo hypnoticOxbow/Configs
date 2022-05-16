@@ -182,14 +182,14 @@
         , ((modm .|. shiftMask,               xK_y     ), spawn "xrandr --output eDP1 --rotate left")
     --Opening emacs editor
         , ((modm .|. controlMask, xK_e     ), spawn "/home/ian/.local/bin/emacs.sh")
+        , ((modm,                 xK_b     ), spawn "/home/ian/.local/bin/emacs-new-frame.sh")
     --youtube-dl and play in vlc script
         , ((modm .|. controlMask, xK_d     ), spawn "~/.local/bin/downloader")
     --Screenshot
         , ((modm .|. controlMask, xK_s     ), spawn "sh ~/.local/bin/leanshot-upload-selection.sh")
     --Music Player hotkeys
         , ((modm,               xK_n     ), spawn "playerctl next")
-        , ((modm,               xK_b     ), spawn "playerctl play-pause")
-        , ((modm,               xK_v     ), spawn "playerctl previous")
+        , ((modm,               xK_v     ), spawn "playerctl play-pause")
 
     --Passmenu Coolness
         , ((modm,               xK_p     ), spawn "passmenu")
