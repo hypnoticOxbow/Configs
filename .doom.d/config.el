@@ -1,6 +1,6 @@
 ;;; .doom.d/config.el -*- lexical-binding: t; -*-
-
 ;; Place your private configuration here
+;;
 ;;
 ;;
 ;; A more complex, more lazy-loaded config
@@ -34,6 +34,9 @@
 ;; Long lines
 (setq-default bidi-paragraph-direction 'left-to-right)
 
+
+;; Autoformatter turning on
+(add-hook 'c++-mode-hook #'format-all-mode)
 
 (defun number-region (start end)
   (interactive "r")

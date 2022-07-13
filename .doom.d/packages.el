@@ -26,6 +26,9 @@
            :files ("*.el" "filters" "preprocessors")))
 
 (package! frames-only-mode :recipe (:host github :repo "davidshepherd7/frames-only-mode"))
+(package! cheat-sh :recipe (:host github :repo "davep/cheat-sh.el"))
+(package! merlin :pin "43ae9df9e30d8c857db625b2bb78c98c5a0a3a32")
+
 ;; (package! polymode)
 ;; (package! org-agda-mode :recipe (:host github :repo "alhassy/org-agda-mode"))
 

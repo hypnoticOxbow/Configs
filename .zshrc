@@ -272,13 +272,12 @@ alias pacinst="pacman -Slq | fzf --multi --preview 'cat <(pacman -Si {1}) <(pacm
 alias evw="cd ~/Projects/PL-Research/"
 alias sch="cd ~/Documents/School/2022-Spring/"
 alias nf="cd ~/Projects/neo-fuzz/code/"
+alias lmcas="cd ~/Projects/lmcas/code/"
 alias hom="cd ~/Projects/homer"
 alias svnls="svn st | cut -c 9-"
 alias lc='lsd'
 alias lct='colorls -A --sd --tree'
 alias prettyjson="python -m json.tool"
-alias vim=nvim
-alias vi=nvim
 alias cat='bat'
 alias batp='bat --paging=never'
 alias ls='lsd'
@@ -373,5 +372,7 @@ function countTimeDiff() {
     TIME_DIFF="$HRS:$MIN:$SEC";
     echo $TIME_DIFF;
 }
+
+export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
 
 . ~/.ghcup/env
